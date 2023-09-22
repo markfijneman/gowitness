@@ -92,20 +92,20 @@
             <!-- no status code. -->
           {{ else }}
             {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
-              <div class="card-status-top bg-green gallery-card-status"></div>
+              <div class="card-status-top bg-green website-card-status"></div>
             {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
-              <div class="card-status-top bg-blue gallery-card-status"></div>
-            {{ else if and (ge .ResponseCode 400) (le .ResponseCode 500) }}
-              <div class="card-status-top bg-yellow gallery-card-status"></div>
+              <div class="card-status-top bg-blue website-card-status"></div>
+            {{ else if and (ge .ResponseCode 400) (le .ResponseCode 499) }}
+              <div class="card-status-top bg-yellow website-card-status"></div>
             {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
-              <div class="card-status-top bg-red gallery-card-status"></div>
+              <div class="card-status-top bg-red website-card-status"></div>
             {{ else }}
-              <div class="card-status-top bg-gray-100 gallery-card-status"></div>
+              <div class="card-status-top bg-gray-100 website-card-status"></div>
             {{ end }}
           {{ end }}
 
           <div class="card-header d-flex align-items-center">
-            <div class="gallery-card-titles">
+            <div class="website-card-titles">
               <div data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .URL }}"><a href='{{ .URL }}' target="_blank">{{ .URL }}</a></div>
               <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Title }}"><span>{{ .Title }}</span></div>
             </div>
@@ -141,7 +141,7 @@
                   <span class="badge bg-green-lt">{{ .ResponseCode }}</span>
                   {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
                   <span class="badge bg-blue-lt">{{ .ResponseCode }}</span>
-                  {{ else if and (ge .ResponseCode 400) (le .ResponseCode 500) }}
+                  {{ else if and (ge .ResponseCode 400) (le .ResponseCode 499) }}
                   <span class="badge bg-yellow-lt">{{ .ResponseCode }}</span>
                   {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
                   <span class="badge bg-red-lt">{{ .ResponseCode }}</span>

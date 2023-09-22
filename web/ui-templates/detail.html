@@ -33,7 +33,7 @@
       <div class="col-12 col-md-auto ms-auto d-print-none">
         <div class="btn-list">
           <a href='{{ URL "/details/" }}{{ .Previous }}'
-            class="btn d-none d-sm-inline-block {{ if eq .Previous 0 }}disabled{{ end }}">
+            class="btn btn-primary d-none d-sm-inline-block {{ if eq .Previous 0 }}disabled{{ end }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevrons-left" width="24"
               height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
               stroke-linejoin="round">
@@ -67,35 +67,84 @@
     <div class="row">
 
       <!-- left column -->
-      <div class="col-sm-12 col-md-4 col-lg-5 col-xl-5">
+      <div class="col-sm-12 col-md-4 col-lg-5 col-xl-5 pe-1">
         <div class="row row-cards">
 
           <div class="col-12">
             <div class="card card-sm">
-              {{ if .Data.IsPDF }}
-                <embed class="card-img-top" src='{{ URL "/screenshots/" }}{{ .Data.Filename }}' type="application/pdf" frameBorder="0"
-                  scrolling="auto" height="100%" width="100%"></embed>
-              {{ else if .Data.Screenshot }}
-                <a class="d-block">
-                  <img loading="lazy" src="data:image/png;base64,{{ .Data.Screenshot }}"; class="card-img-top">
-                </a>
-              {{ else }}
-                <a class="chocolat-image" href='{{ URL "/screenshots/" }}{{ .Data.Filename }}' target="_blank" class="d-block">
-                  <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Data.Filename }}'
-                    onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" class="card-img-top">
-              {{ end }}
+              <div class="card-header d-flex align-items-center">
+                <!-- Status code -->
+                {{ if (eq 0 .Data.ResponseCode)}}
+                  <!-- no status code. -->
+                {{ else }}
+                  {{ if and (ge .Data.ResponseCode 200) (le .Data.ResponseCode 299) }}
+                    <div class="card-status-top bg-green website-card-status"></div>
+                  {{ else if and (ge .Data.ResponseCode 300) (le .Data.ResponseCode 399) }}
+                    <div class="card-status-top bg-blue website-card-status"></div>
+                  {{ else if and (ge .Data.ResponseCode 400) (le .Data.ResponseCode 499) }}
+                    <div class="card-status-top bg-yellow website-card-status"></div>
+                  {{ else if and (ge .Data.ResponseCode 500) (le .Data.ResponseCode 600) }}
+                    <div class="card-status-top bg-red website-card-status"></div>
+                  {{ else }}
+                    <div class="card-status-top bg-gray-100 website-card-status"></div>
+                  {{ end }}
+                {{ end }}
+                
+                <div class="gallery-card-titles">
+                  <div data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .URL }}"><a href='{{ .URL }}' target="_blank">{{ .Data.URL }}</a></div>
+                  <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Title }}"><span>{{ .Data.Title }}</span></div>
+                </div>
+                
+                <div class="card-actions">
+                  <a href="{{ .Data.URL }}" target="_blank" class="btn btn-primary ms-auto">Visit URL</a>
+                </div>
+              </div>
+
+              <div class="card-body p-0">
+                {{ if .Data.IsPDF }}
+                  <embed src='{{ URL "/screenshots/" }}{{ .Data.Filename }}' type="application/pdf" frameBorder="0"
+                    scrolling="auto" height="100%" width="100%"></embed>
+                {{ else if .Data.Screenshot }}
+                  <a class="d-block">
+                    <img loading="lazy" src="data:image/png;base64,{{ .Data.Screenshot }}";>
+                  </a>
+                {{ else }}
+                  <a class="chocolat-image" href='{{ URL "/screenshots/" }}{{ .Data.Filename }}' target="_blank" class="d-block">
+                    <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Data.Filename }}'
+                      onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" />
+                  </a>
+                {{ end }}
+              </div>
+              
               <div class="card-footer">
                 <div class="d-flex">
                   <div>
-                    <div>{{ .Data.URL }}</div>
-                    <div class="text-muted">{{ .Data.Title }}</div>
                     <div>
+                      <!-- Status code -->
+                      {{ if (eq 0 .Data.ResponseCode) }}
+                        <!-- no status code. -->
+                      {{ else }}
+                        {{ if (eq 200 .Data.ResponseCode) }}
+                          <!-- hide status code 200 -->
+                        {{ else if and (ge .Data.ResponseCode 201) (le .Data.ResponseCode 299) }}
+                          <span class="badge bg-green-lt">{{ .Data.ResponseCode }}</span>
+                        {{ else if and (ge .Data.ResponseCode 300) (le .Data.ResponseCode 399) }}
+                          <span class="badge bg-blue-lt">{{ .Data.ResponseCode }}</span>
+                        {{ else if and (ge .Data.ResponseCode 400) (le .Data.ResponseCode 499) }}
+                          <span class="badge bg-yellow-lt">{{ .Data.ResponseCode }}</span>
+                        {{ else if and (ge .Data.ResponseCode 500) (le .Data.ResponseCode 600) }}
+                          <span class="badge bg-red-lt">{{ .Data.ResponseCode }}</span>
+                        {{ else }}
+                          <span class="badge bg-gray-200">{{ .Data.ResponseCode }}</span>
+                        {{ end }}
+                      {{ end }}
+                      
+                      <!-- Technologies -->
                       {{ range .Data.Technologies }}
-                      <span class="badge bg-blue">{{ .Value}}</span>
+                      <span class="badge bg-gray">{{ .Value}}</span>
                       {{ end }}
                     </div>
                   </div>
-                  <a href="{{ .Data.URL }}" target="_blank" class="btn btn-primary ms-auto">Visit URL</a>
                 </div>
               </div>
             </div>
@@ -223,7 +272,7 @@
               bg-green
               {{ else if and (ge .Data.ResponseCode 300) (le .Data.ResponseCode 399) }}
               bg-blue
-              {{ else if and (ge .Data.ResponseCode 400) (le .Data.ResponseCode 500) }}
+              {{ else if and (ge .Data.ResponseCode 400) (le .Data.ResponseCode 499) }}
               bg-yellow
               {{ else if and (ge .Data.ResponseCode 500) (le .Data.ResponseCode 600) }}
               bg-red
@@ -231,15 +280,15 @@
               ">HTTP {{ .Data.ResponseCode }}</div>
               <div class="card-status-top 
               {{ if and (ge .Data.ResponseCode 200) (le .Data.ResponseCode 299) }}
-              bg-success
+              bg-green
               {{ else if and (ge .Data.ResponseCode 300) (le .Data.ResponseCode 399) }}
-              bg-primary
-              {{ else if and (ge .Data.ResponseCode 400) (le .Data.ResponseCode 500) }}
-              bg-warning
+              bg-blue
+              {{ else if and (ge .Data.ResponseCode 400) (le .Data.ResponseCode 499) }}
+              bg-yellow
               {{ else if and (ge .Data.ResponseCode 500) (le .Data.ResponseCode 600) }}
-              bg-danger
+              bg-red
               {{ end }}
-              "></div>
+              website-card-status"></div>
               <div class="card-header">
                 <h3 class="card-title">Response Headers</h3>
               </div>
@@ -297,19 +346,19 @@
                       </td>
                       <td class="text-muted text-nowrap">
                         {{ if (eq 0 .StatusCode)}}
-                        <!-- no status code. -->
+                          <!-- no status code. -->
                         {{ else }}
-                        {{ if and (ge .StatusCode 200) (le .StatusCode 299) }}
-                        <span class="badge bg-green">{{ .StatusCode }}</span>
-                        {{ else if and (ge .StatusCode 300) (le .StatusCode 399) }}
-                        <span class="badge bg-blue">{{ .StatusCode }}</span>
-                        {{ else if and (ge .StatusCode 400) (le .StatusCode 500) }}
-                        <span class="badge bg-yellow">{{ .StatusCode }}</span>
-                        {{ else if and (ge .StatusCode 500) (le .StatusCode 600) }}
-                        <span class="badge bg-red">{{ .StatusCode }}</span>
-                        {{ else }}
-                        <span class="badge">{{ .StatusCode }}</span>
-                        {{ end }}
+                          {{ if and (ge .StatusCode 200) (le .StatusCode 299) }}
+                            <span class="badge bg-green-lt">{{ .StatusCode }}</span>
+                          {{ else if and (ge .StatusCode 300) (le .StatusCode 399) }}
+                            <span class="badge bg-blue-lt">{{ .StatusCode }}</span>
+                          {{ else if and (ge .StatusCode 400) (le .StatusCode 499) }}
+                            <span class="badge bg-yellow-lt">{{ .StatusCode }}</span>
+                          {{ else if and (ge .StatusCode 500) (le .StatusCode 600) }}
+                            <span class="badge bg-red-lt">{{ .StatusCode }}</span>
+                          {{ else }}
+                            <span class="badge">{{ .StatusCode }}</span>
+                          {{ end }}
                         {{ end }}
                       </td>
                       <td class="text-muted">
