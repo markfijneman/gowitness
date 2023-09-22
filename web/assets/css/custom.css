@@ -1,0 +1,24 @@
+.gallery-card-titles {
+    white-space: nowrap;
+    width: 100%;
+}
+
+.gallery-card-titles div {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* Color URL ellipsis */ 
+.gallery-card-titles div:first-of-type {
+    color: rgb(32, 107, 196)
+}
+
+/* Make empty titles take up space by placing an unselectable zero-width space after them */
+.gallery-card-titles div:after {
+    content: '\200b';
+}
+
+.gallery-card-badges {
+    overflow-y: scroll;
+    white-space: nowrap;
+}

@@ -76,33 +76,38 @@
       <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
 
         <div class="card card-sm">
-          {{ if .IsPDF }}
-            <embed src='{{ URL "/screenshots/" }}{{ .Filename }}' type="application/pdf" frameBorder="0" scrolling="auto"
-              height="100%" width="100%"></embed>
-            {{ else if .Screenshot }}
-            <a class="d-block">
-              <img loading="lazy" src="data:image/png;base64,{{ .Screenshot }}" alt="Screenshot" class="card-img-top">
-            </a>
-          {{ else }}
-            <a href='{{ URL "/screenshots/" }}{{ .Filename }}' target="_blank" class="d-block">
-              <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Filename }}'
-                onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" class="card-img-top"/>
-            </a>
-          {{ end }}
+          <div class="card-header d-flex align-items-center">
+            <div class="gallery-card-titles">
+              <div data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .URL }}"><a href='{{ .URL }}' target="_blank">{{ .URL }}</a></div>
+              <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Title }}"><span>{{ .Title }}</span></div>
+            </div>
+          </div>
 
-          <div class="card-body">
+          <div class="card-body p-0">
+            {{ if .IsPDF }}
+              <embed src='{{ URL "/screenshots/" }}{{ .Filename }}' type="application/pdf" frameBorder="0" scrolling="auto"
+                height="100%" width="100%"></embed>
+              {{ else if .Screenshot }}
+              <a class="d-block">
+                <img loading="lazy" src="data:image/png;base64,{{ .Screenshot }}" alt="Screenshot">
+              </a>
+            {{ else }}
+              <a href='{{ URL "/screenshots/" }}{{ .Filename }}' target="_blank" class="d-block">
+                <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Filename }}'
+                  onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" />
+              </a>
+            {{ end }}
+          </div>
+
+          <div class="card-footer">
             <div class="d-flex align-items-center">
-              <div>
-                <div><a href='{{ .URL }}' target="_blank">{{ .URL }}</a></div>
-                <div class="text-muted">{{ .Title }}</div>
-                <div>
-                  {{ range .Technologies }}
-                  <span class="badge bg-blue">{{ .Value}}</span>
-                  {{ end }}
-                </div>
+              <div class="gallery-card-badges">
+                {{ range .Technologies }}
+                <span class="badge bg-gray">{{ .Value}}</span>
+                {{ end }}
               </div>
-              <div class="ms-auto">
-                <a href='{{ URL "/details/" }}{{ .ID }}' data-bs-toggle="tooltip" data-bs-placement="top" title="View details" class="text-muted">
+              <div class="card-actions">
+                <a href='{{ URL "/details/" }}{{ .ID }}' data-bs-toggle="tooltip" data-bs-placement="top" title="View details" class="btn-action">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                     <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
@@ -113,7 +118,6 @@
                 </a>
               </div>
             </div>
-
           </div>
         </div>
       </div>
