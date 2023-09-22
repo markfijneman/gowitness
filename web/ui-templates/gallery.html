@@ -128,14 +128,16 @@
             {{ end }}
           </div>
 
-          <div class="card-footer">
+          <div class="card-footer gallery-card-footer">
             <div class="d-flex align-items-center">
               <div class="gallery-card-badges">
                 <!-- Status code -->
-                {{ if (eq 0 .ResponseCode)}}
+                {{ if (eq 0 .ResponseCode) }}
                   <!-- no status code. -->
                 {{ else }}
-                  {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
+                  {{ if (eq 200 .ResponseCode) }}
+                    <!-- hide status code 200 -->
+                  {{ else if and (ge .ResponseCode 201) (le .ResponseCode 299) }}
                   <span class="badge bg-green-lt">{{ .ResponseCode }}</span>
                   {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
                   <span class="badge bg-blue-lt">{{ .ResponseCode }}</span>
@@ -144,7 +146,7 @@
                   {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
                   <span class="badge bg-red-lt">{{ .ResponseCode }}</span>
                   {{ else }}
-                  <span class="badge">{{ .ResponseCode }}</span>
+                  <span class="badge bg-gray-200">{{ .ResponseCode }}</span>
                   {{ end }}
                 {{ end }}
 

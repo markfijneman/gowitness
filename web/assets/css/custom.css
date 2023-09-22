@@ -22,6 +22,10 @@
     content: '\200b';
 }
 
+.gallery-card-footer {
+    height: 53px;
+}
+
 .gallery-card-badges {
     overflow-y: scroll;
     white-space: nowrap;
