@@ -1,5 +1,20 @@
 {{ template "header" . }}
 
+<!-- chocolat.js image lightboxes -->
+<script src='{{ URL "/assets/js/chocolat.js" }}'></script>
+<link href='{{ URL "/assets/css/chocolat.css" }}' rel="stylesheet" />
+
+<!-- Initialize chocolat.js -->
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) { 
+    Chocolat(document.querySelectorAll('.chocolat-image'), {
+      /* Disable pagination */
+      linkImages: false,
+      pagination: () => { return "" }
+    })
+  })
+</script>
+
 <!-- content header bar -->
 <div class="container-xl">
   <!-- Page title -->
@@ -65,7 +80,7 @@
                   <img loading="lazy" src="data:image/png;base64,{{ .Data.Screenshot }}"; class="card-img-top">
                 </a>
               {{ else }}
-                <a href='{{ URL "/screenshots/" }}{{ .Data.Filename }}' target="_blank" class="d-block">
+                <a class="chocolat-image" href='{{ URL "/screenshots/" }}{{ .Data.Filename }}' target="_blank" class="d-block">
                   <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Data.Filename }}'
                     onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" class="card-img-top">
               {{ end }}

@@ -1,3 +1,7 @@
+.gallery-card-status {
+    opacity: 0.5;
+}
+
 .gallery-card-titles {
     white-space: nowrap;
     width: 100%;

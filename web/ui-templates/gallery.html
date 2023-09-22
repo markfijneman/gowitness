@@ -1,5 +1,16 @@
 {{ template "header" . }}
 
+<!-- chocolat.js image lightboxes -->
+<script src='{{ URL "/assets/js/chocolat.js" }}'></script>
+<link href='{{ URL "/assets/css/chocolat.css" }}' rel="stylesheet" />
+
+<!-- Initialize chocolat.js -->
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) { 
+      Chocolat(document.querySelectorAll('.chocolat-image'))
+  })
+</script>
+
 <!-- content header bar -->
 <div class="container-xl">
   <!-- Page title -->
@@ -74,14 +85,32 @@
       {{ range .Data.Records}}
 
       <div class="col-sm-6 col-md-6 col-lg-4 col-xl-2">
-
+      
         <div class="card card-sm">
+          <!-- Status code -->
+          {{ if (eq 0 .ResponseCode)}}
+            <!-- no status code. -->
+          {{ else }}
+            {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
+              <div class="card-status-top bg-green gallery-card-status"></div>
+            {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
+              <div class="card-status-top bg-blue gallery-card-status"></div>
+            {{ else if and (ge .ResponseCode 400) (le .ResponseCode 500) }}
+              <div class="card-status-top bg-yellow gallery-card-status"></div>
+            {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
+              <div class="card-status-top bg-red gallery-card-status"></div>
+            {{ else }}
+              <div class="card-status-top bg-gray-100 gallery-card-status"></div>
+            {{ end }}
+          {{ end }}
+
           <div class="card-header d-flex align-items-center">
             <div class="gallery-card-titles">
               <div data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .URL }}"><a href='{{ .URL }}' target="_blank">{{ .URL }}</a></div>
               <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Title }}"><span>{{ .Title }}</span></div>
             </div>
           </div>
+
 
           <div class="card-body p-0">
             {{ if .IsPDF }}
@@ -92,7 +121,7 @@
                 <img loading="lazy" src="data:image/png;base64,{{ .Screenshot }}" alt="Screenshot">
               </a>
             {{ else }}
-              <a href='{{ URL "/screenshots/" }}{{ .Filename }}' target="_blank" class="d-block">
+              <a class="chocolat-image" href='{{ URL "/screenshots/" }}{{ .Filename }}' class="d-block">
                 <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Filename }}'
                   onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" />
               </a>
@@ -102,6 +131,24 @@
           <div class="card-footer">
             <div class="d-flex align-items-center">
               <div class="gallery-card-badges">
+                <!-- Status code -->
+                {{ if (eq 0 .ResponseCode)}}
+                  <!-- no status code. -->
+                {{ else }}
+                  {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
+                  <span class="badge bg-green-lt">{{ .ResponseCode }}</span>
+                  {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
+                  <span class="badge bg-blue-lt">{{ .ResponseCode }}</span>
+                  {{ else if and (ge .ResponseCode 400) (le .ResponseCode 500) }}
+                  <span class="badge bg-yellow-lt">{{ .ResponseCode }}</span>
+                  {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
+                  <span class="badge bg-red-lt">{{ .ResponseCode }}</span>
+                  {{ else }}
+                  <span class="badge">{{ .ResponseCode }}</span>
+                  {{ end }}
+                {{ end }}
+
+                <!-- Technologies -->
                 {{ range .Technologies }}
                 <span class="badge bg-gray">{{ .Value}}</span>
                 {{ end }}
