@@ -43,7 +43,7 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 		p.CurrPage = 1
 	}
 	if p.Limit == 0 {
-		p.Limit = 66
+		p.Limit = 60
 	}
 	if len(p.OrderBy) > 0 {
 		for _, order := range p.OrderBy {
