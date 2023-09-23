@@ -138,10 +138,12 @@
                           <span class="badge bg-gray-200">{{ .Data.ResponseCode }}</span>
                         {{ end }}
                       {{ end }}
+
+                      <!-- TODO Interesting headers -->
                       
                       <!-- Technologies -->
                       {{ range .Data.Technologies }}
-                      <span class="badge bg-gray">{{ .Value}}</span>
+                      <span class="badge bg-indigo-lt">{{ .Value}}</span>
                       {{ end }}
                     </div>
                   </div>

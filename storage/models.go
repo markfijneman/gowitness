@@ -41,6 +41,16 @@ func (url *URL) AddHeader(key string, value string) {
 	})
 }
 
+// GetHeader gets a header from a URL
+func (url *URL) GetHeader(key string) string {
+	for _, header := range url.Headers {
+		if header.Key == key {
+			return header.Value
+		}
+	}
+	return ""
+}
+
 // AddTechnlogies adds a new technologies to a URL
 func (url *URL) AddTechnologie(value string) {
 	url.Technologies = append(url.Technologies, Technologie{

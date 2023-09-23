@@ -41,11 +41,16 @@
     aspect-ratio: 1440/900;
 }
 
-.gallery-card-footer {
+.website-card-footer {
     height: 53px;
 }
 
-.gallery-card-badges {
+.website-card-badges {
     overflow-y: scroll;
     white-space: nowrap;
+}
+
+.website-card-badge-icon {
+    width: 12px !important;
+    height: 12px !important;
 }

@@ -62,7 +62,7 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 		offset = (p.CurrPage - 1) * p.Limit
 	}
 
-	if err := db.Limit(p.Limit).Offset(offset).Preload("Technologies").Find(data).Error; err != nil {
+	if err := db.Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
 		return nil, err
 	}
 
