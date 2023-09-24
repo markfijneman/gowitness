@@ -8,7 +8,7 @@
       <div class="row g-2 align-items-center">
         <div class="col">
           <h2 class="page-title">
-            Search Results for <kbd>{{ .Term }}</kbd>
+            Search Results for "{{ .Term }}"
           </h2>
         </div>
       </div>
@@ -49,7 +49,7 @@
                       <tr>
                         <td>
                           <a href='{{ URL "/details" }}/{{ .ID }}' data-bs-toggle="tooltip" data-bs-placement="top" title="View details">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info btn-action" style="stroke-width: 1 !important;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                               <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
                               <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
@@ -60,24 +60,27 @@
                         </td>
                         <td class="text-muted">
                           {{ if (eq 0 .ResponseCode)}}
-                          <!-- no status code. -->
+                            <!-- no status code. -->
                           {{ else }}
-                          {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
-                          <span class="badge bg-green">{{ .ResponseCode }}</span>
-                          {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
-                          <span class="badge bg-blue">{{ .ResponseCode }}</span>
-                          {{ else if and (ge .ResponseCode 400) (le .ResponseCode 500) }}
-                          <span class="badge bg-yellow">{{ .ResponseCode }}</span>
-                          {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
-                          <span class="badge bg-red">{{ .ResponseCode }}</span>
-                          {{ else }}
-                          <span class="badge">{{ .ResponseCode }}</span>
-                          {{ end }}
+                            {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
+                              <span class="badge bg-green-lt">{{ .ResponseCode }}</span>
+                            {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
+                              <span class="badge bg-blue-lt">{{ .ResponseCode }}</span>
+                            {{ else if and (ge .ResponseCode 400) (le .ResponseCode 499) }}
+                              <span class="badge bg-yellow-lt">{{ .ResponseCode }}</span>
+                            {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
+                              <span class="badge bg-red-lt">{{ .ResponseCode }}</span>
+                            {{ else }}
+                              <span class="badge">{{ .ResponseCode }}</span>
+                            {{ end }}
                           {{ end }}
                         </td>
-                        <td>
+                        <td class="text-muted">
                           {{ if Contains .DOM $.Term }}
-                          <span class="badge">Yes</span>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M5 12l5 5l10 -10"></path>
+                         </svg>
                           {{ end }}
                         </td>
                         <td class="text-muted">
@@ -124,8 +127,16 @@
                       {{ range $url := .Tech }}
                       {{ range $tech := $url.Technologies}}
                       <tr>
-                        <td>
-                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>Detail</a>
+                        <td class="text-muted">
+                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info btn-action" style="stroke-width: 1 !important;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                              <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                              <path d="M11 14h1v4h1"></path>
+                              <path d="M12 11h.01"></path>
+                            </svg>
+                          </a>
                         </td>
                         <td>{{ $url.URL }}</td>
                         <td>{{ $tech.Value }}</td>
@@ -166,8 +177,16 @@
                       {{ range $url := .Headers }}
                       {{ range $header := $url.Headers}}
                       <tr>
-                        <td>
-                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>Detail</a>
+                        <td class="text-muted">
+                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info btn-action" style="stroke-width: 1 !important;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                              <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                              <path d="M11 14h1v4h1"></path>
+                              <path d="M12 11h.01"></path>
+                            </svg>
+                          </a>
                         </td>
                         <td>{{ $url.URL }}</td>
                         <td class="text-nowrap">{{ .Key }}</td>
@@ -209,8 +228,16 @@
                       {{ range $url := .Console }}
                       {{ range $log := $url.Console }}
                       <tr>
-                        <td>
-                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>Detail</a>
+                        <td class="text-muted">
+                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info btn-action" style="stroke-width: 1 !important;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                              <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                              <path d="M11 14h1v4h1"></path>
+                              <path d="M12 11h.01"></path>
+                            </svg>
+                          </a>
                         </td>
                         <td>{{ $url.URL }}</td>
                         <td class="text-nowrap">{{ .Type }}</td>
@@ -256,8 +283,16 @@
                       {{ range $url := .Network }}
                       {{ range $log := $url.Network }}
                       <tr>
-                        <td>
-                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>Detail</a>
+                        <td class="text-muted">
+                          <a href='{{ URL "/details" }}/{{ $url.ID }}'>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info btn-action" style="stroke-width: 1 !important;" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+                              <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+                              <path d="M11 14h1v4h1"></path>
+                              <path d="M12 11h.01"></path>
+                            </svg>
+                          </a>
                         </td>
                         <td>
                           {{ if (eq $log.RequestType 0) }}
