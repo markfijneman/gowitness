@@ -113,6 +113,11 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 		r.POST("/submit", submitHandler)
 		r.POST("/search", searchHandler)
 
+		// error routes
+		r.NoRoute(func(c *gin.Context) {
+			c.HTML(http.StatusNotFound, "404.html", nil)
+		})
+
 		// static assets & raw screenshot files
 		assetFs, err := fs.Sub(Embedded, "web/assets")
 		if err != nil {
@@ -237,7 +242,7 @@ func dashboardHandler(c *gin.Context) {
 	rsDB.Model(&storage.Technologie{}).Distinct().Count(&techCount)
 
 	c.HTML(http.StatusOK, "dashboard.html", gin.H{
-		"Page":			"dashboard",
+		"Page":         "dashboard",
 		"DBSzie":       fmt.Sprintf("%.2f", float64(size)/1e6),
 		"URLCount":     urlCount,
 		"CertCount":    certCount,
@@ -367,7 +372,7 @@ func detailHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "detail.html", gin.H{
-		"Page":	    "detail",
+		"Page":     "detail",
 		"Title":    "Details - " + url.URL,
 		"ID":       id,
 		"Data":     url,
@@ -511,8 +516,8 @@ func searchHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "search.html", gin.H{
-		"Page":			"search",
-		"Title": 	 	"Search - " + query,
+		"Page":         "search",
+		"Title":        "Search - " + query,
 		"Term":         query,
 		"URLS":         urls,
 		"Tech":         technologies,
