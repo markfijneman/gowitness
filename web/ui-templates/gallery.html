@@ -221,59 +221,51 @@
 
     <!-- pager -->
     <div class="d-flex">
-      <ul class="pagination ms-auto">
-        <!-- first page -->
-        <li class="page-item {{ if le .Data.Page 1 }}disabled{{ end }}">
-          <a class="page-link"
-            href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.PrevPage }}'
-            tabindex="-1" {{ if le .Data.Page 1 }}aria-disabled="true" {{ end }}>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-              stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <polyline points="15 6 9 12 15 18"></polyline>
-            </svg>
-            prev
-          </a>
-        </li>
+      <div class="btn-group ms-auto">
+        <!-- previous -->
+        <a href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.PrevPage }}'
+            tabindex="-1" {{ if le .Data.Page 1 }}aria-disabled="true" {{ end }}
+            class="btn btn-outline-primary d-none d-sm-inline-block {{ if le .Data.Page 1 }}disabled{{ end }}"
+            style="border-right: 0px;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <polyline points="15 6 9 12 15 18"></polyline>
+          </svg>
+          Previous
+        </a>
+        
+        <select class="form-select" style="border-radius: 0px; border-color: #206bc4;" onChange="window.location.href = '{{ URL "/gallery" }}?{{ if $.Data.Ordered }}perception_sort=true&{{ end }}limit={{ $.Data.Limit }}&page=' + this.value">
+          <!-- previous links -->
+          {{ range $p := .Data.PrevPageRange }}
+            <option value="{{ $p }}">
+              {{ $p }}
+            </option>
+          {{ end }}
 
-        <!-- previous links -->
-        {{ range $p := .Data.PrevPageRange }}
-        <li class="page-item">
-          <a class="page-link"
-            href='{{ URL "/gallery" }}?{{ if $.Data.Ordered }}perception_sort=true&{{ end }}limit={{ $.Data.Limit }}&page={{ $p }}'>
-            {{ $p }}
-          </a>
-        </li>
-        {{ end }}
-
-        <!-- current page -->
-        <li class="page-item active">
-          <a class="page-link" href="#">{{ .Data.Page }}</a>
-        </li>
-
-        <!-- next page range -->
-        {{ range $p := .Data.NextPageRange }}
-        <li class="page-item">
-          <a class="page-link"
-            href='{{ URL "/gallery" }}?{{ if $.Data.Ordered }}perception_sort=true&{{ end }}limit={{ $.Data.Limit }}&page={{ $p }}'>
-            {{ $p }}
-          </a>
-        </li>
-        {{ end }}
+          <!-- current page -->
+          <option selected>{{ .Data.Page }}</option>
+          
+          <!-- next page range -->
+          {{ range $p := .Data.NextPageRange }}
+            <option value="{{ $p }}">
+              {{ $p }}
+            </option>
+          {{ end }}
+        </select>
 
         <!-- next -->
-        <li class="page-item {{ if eq .Data.Page .Data.NextPage }}disabled{{ end }}">
-          <a class="page-link"
-            href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.NextPage }}'>
-            next
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-              stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <polyline points="9 6 15 12 9 18"></polyline>
-            </svg>
-          </a>
-        </li>
-      </ul>
+        <a href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.NextPage }}'
+          class="btn btn-outline-primary d-none d-sm-inline-block {{ if eq (len .Data.NextPageRange) 0 }}disabled{{ end }}"
+          style="border-left: 0px;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <polyline points="9 6 15 12 9 18"></polyline>
+          </svg>
+          Next
+        </a>
+      </div>
     </div>
   </div>
 </div>
