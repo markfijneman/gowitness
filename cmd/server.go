@@ -232,6 +232,7 @@ func dashboardHandler(c *gin.Context) {
 	rsDB.Model(&storage.Technologie{}).Distinct().Count(&techCount)
 
 	c.HTML(http.StatusOK, "dashboard.html", gin.H{
+		"Page":			"dashboard",
 		"DBSzie":       fmt.Sprintf("%.2f", float64(size)/1e6),
 		"URLCount":     urlCount,
 		"CertCount":    certCount,
@@ -243,7 +244,9 @@ func dashboardHandler(c *gin.Context) {
 
 // getSubmitHandler handles generating the view to submit urls
 func getSubmitHandler(c *gin.Context) {
-	c.HTML(http.StatusOK, "submit.html", nil)
+	c.HTML(http.StatusOK, "submit.html", gin.H{
+		"Page": "submit",
+	})
 }
 
 // submitHandler handles url submissions
@@ -359,6 +362,7 @@ func detailHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "detail.html", gin.H{
+		"Page":	    "detail",
 		"ID":       id,
 		"Data":     url,
 		"Previous": previous,
@@ -398,6 +402,7 @@ func tableHandler(c *gin.Context) {
 	rsDB.Preload("Network").Preload("Console").Preload("Technologies").Find(&urls)
 
 	c.HTML(http.StatusOK, "table.html", gin.H{
+		"Page": "table",
 		"Data": urls,
 	})
 }
@@ -436,6 +441,7 @@ func galleryHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "gallery.html", gin.H{
+		"Page": "gallery",
 		"Data": page,
 	})
 }
@@ -497,6 +503,7 @@ func searchHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "search.html", gin.H{
+		"Page":			"search",
 		"Term":         query,
 		"URLS":         urls,
 		"Tech":         technologies,
