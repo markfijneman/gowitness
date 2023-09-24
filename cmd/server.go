@@ -97,6 +97,8 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 			"URL": func(url string) string {
 				return options.BasePath + strings.TrimPrefix(url, "/")
 			},
+			"HasPrefix": strings.HasPrefix,
+			"HasSuffix": strings.HasSuffix,
 		}
 		tmpl := template.Must(template.New("").Funcs(funcMap).ParseFS(Embedded, "web/ui-templates/*.html"))
 		r.SetHTMLTemplate(tmpl)
