@@ -111,6 +111,7 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 		r.GET("/details/:id/dom", detailDOMDownloadHandler)
 		r.GET("/submit", getSubmitHandler)
 		r.POST("/submit", submitHandler)
+		r.GET("/search", searchHandler)
 		r.POST("/search", searchHandler)
 
 		// error routes
@@ -465,7 +466,10 @@ func searchHandler(c *gin.Context) {
 	query := c.PostForm("search_query")
 
 	if query == "" {
-		c.HTML(http.StatusOK, "search.html", nil)
+		c.HTML(http.StatusOK, "search.html", gin.H{
+			"Page":  "search",
+			"Title": "Search",
+		})
 		return
 	}
 
