@@ -123,6 +123,11 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 		r.StaticFS("/assets/", http.FS(assetFs))
 		r.StaticFS("/screenshots", http.Dir(options.ScreenshotPath))
 
+		// favicon
+		r.GET("/favicon.ico", func(c *gin.Context) {
+			c.Redirect(http.StatusMovedPermanently, "/assets/img/favicon.ico")
+		})
+
 		// json api routes
 		api := r.Group("/api")
 		{
