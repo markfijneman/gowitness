@@ -250,7 +250,8 @@ func dashboardHandler(c *gin.Context) {
 // getSubmitHandler handles generating the view to submit urls
 func getSubmitHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "submit.html", gin.H{
-		"Page": "submit",
+		"Page":  "submit",
+		"Title": "Submit URL",
 	})
 }
 
@@ -327,7 +328,6 @@ func submitHandler(c *gin.Context) {
 
 // detailHandler gets all of the details for a particular url id
 func detailHandler(c *gin.Context) {
-
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -368,6 +368,7 @@ func detailHandler(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "detail.html", gin.H{
 		"Page":	    "detail",
+		"Title":    "Details - " + url.URL,
 		"ID":       id,
 		"Data":     url,
 		"Previous": previous,
@@ -407,8 +408,9 @@ func tableHandler(c *gin.Context) {
 	rsDB.Preload("Network").Preload("Console").Preload("Technologies").Find(&urls)
 
 	c.HTML(http.StatusOK, "table.html", gin.H{
-		"Page": "table",
-		"Data": urls,
+		"Page":  "table",
+		"Title": "Table",
+		"Data":  urls,
 	})
 }
 
@@ -446,8 +448,9 @@ func galleryHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "gallery.html", gin.H{
-		"Page": "gallery",
-		"Data": page,
+		"Page":  "gallery",
+		"Title": "Gallery",
+		"Data":  page,
 	})
 }
 
@@ -509,6 +512,7 @@ func searchHandler(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "search.html", gin.H{
 		"Page":			"search",
+		"Title": 	 	"Search - " + query,
 		"Term":         query,
 		"URLS":         urls,
 		"Tech":         technologies,
