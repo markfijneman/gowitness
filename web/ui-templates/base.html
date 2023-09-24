@@ -40,7 +40,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3" style="filter: none !important">
+        <h1 class="navbar-brand d-none-navbar-horizontal pe-0 pe-md-3">
           <a href='{{ URL "/" }}' >
             🔍 gowitness
           </a>
@@ -66,10 +66,9 @@
             </a>
           </div>
         </div>
-        <div class="collapse navbar-collapse" id="navbar-menu">
-          <div class="navbar navbar-transparent">
-            <div class="container-xl">
-              <ul class="navbar-nav">
+        <div id="navbar-menu" class="collapse navbar-collapse">
+          <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+              <ul class="navbar-nav" style="width: 100%">
                 <li class="nav-item">
                   <a class="nav-link" href='{{ URL "/" }}'>
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -141,27 +140,29 @@
                     </span>
                   </a>
                 </li>
-  
+                
+                <li class="nav-item" style="margin-left: auto; margin-right: 12px;">
+                  <form action='{{ URL "/search" }}' method="post">
+                    <div class="input-icon">
+                      <span class="input-icon-addon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <circle cx="10" cy="10" r="7" />
+                          <line x1="21" y1="21" x2="15" y2="15" />
+                        </svg>
+                      </span>
+                      <input type="text" value="" class="form-control" placeholder="Search…" name="search_query"
+                        aria-label="Search">
+                    </div>
+                  </form>
+                </li>
               </ul>
   
               <!-- search -->
-              <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last" style="width: 230px">
-                <form action='{{ URL "/search" }}' method="post">
-                  <div class="input-icon">
-                    <span class="input-icon-addon">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <circle cx="10" cy="10" r="7" />
-                        <line x1="21" y1="21" x2="15" y2="15" />
-                      </svg>
-                    </span>
-                    <input type="text" value="" class="form-control" placeholder="Search…" name="search_query"
-                      aria-label="Search">
-                  </div>
-                </form>
-              </div>
-            </div>
+              <!-- <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last" style="width: 230px"> -->
+                
+              <!-- </div> -->
           </div>
         </div>
       </div>
