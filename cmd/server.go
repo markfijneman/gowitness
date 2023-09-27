@@ -368,9 +368,7 @@ func detailHandler(c *gin.Context) {
 		previous = previous - 1
 	}
 
-	if next < max {
-		next = next + 1
-	}
+	next = next + 1
 
 	c.HTML(http.StatusOK, "detail.html", gin.H{
 		"Page":     "detail",
