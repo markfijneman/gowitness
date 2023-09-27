@@ -3,8 +3,10 @@ package storage
 import (
 	"encoding/json"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	"gorm.io/gorm"
 )
 
@@ -57,6 +59,17 @@ func (url *URL) AddTechnologie(value string) {
 	url.Technologies = append(url.Technologies, Technologie{
 		Value: value,
 	})
+}
+
+// GetMetaTag tries to find the meta tag with the supplied name and returns the value
+func (url *URL) GetMetaTag(name string) string {
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(url.DOM))
+	if err != nil {
+		return "ERROR!"
+	}
+
+	value, _ := doc.Find("meta[name='" + name + "' i]").Attr("content")
+	return value
 }
 
 // MarshallCSV returns values as a slice
