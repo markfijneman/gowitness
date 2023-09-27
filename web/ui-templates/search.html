@@ -87,7 +87,7 @@
                           <a class="{{ if .Visited }}url-visited{{ else }}url{{ end }}" href="{{ .URL }}" data-visit-id='{{ .ID }}' target="_blank">{{ .URL }}</a>
                         </td>
                         <td class="text-muted">
-                          <a href="{{ .FinalURL }}" target="_blank">{{ .URL }}</a>
+                          <a href="{{ .FinalURL }}" target="_blank">{{ .FinalURL }}</a>
                         </td>
                         <td class="text-muted">
                           {{ .Title }}
