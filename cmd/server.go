@@ -760,7 +760,6 @@ func apiVisitedHandler(c *gin.Context) {
 	}
 
 	url.Visited = requestData.Visited
-	fmt.Println(requestData.Visited)
 
 	rsDB.Save(url)
 
