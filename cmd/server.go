@@ -142,6 +142,7 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 			api.GET("/detail/:id", apiDetailHandler)
 			api.GET("/detail/:id/screenshot", apiDetailScreenshotHandler)
 			api.POST("/screenshot", apiScreenshotHandler)
+			api.POST("/visited/:id", apiVisitedHandler)
 		}
 
 		log.Info().Str("address", options.ServerAddr).Msg("server listening")
@@ -732,5 +733,38 @@ func apiScreenshotHandler(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"status": "created",
+	})
+}
+
+// apiVisited changes the visited status of a URL
+func apiVisitedHandler(c *gin.Context) {
+	var url storage.URL
+	rsDB.First(&url, c.Param("id"))
+
+	if url.ID == 0 {
+		c.JSON(http.StatusNotFound, nil)
+		return
+	}
+
+	type Request struct {
+		Visited bool `json:"visited"`
+	}
+
+	var requestData Request
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	url.Visited = requestData.Visited
+	fmt.Println(requestData.Visited)
+
+	rsDB.Save(url)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
 	})
 }

@@ -12,6 +12,14 @@
     }
 }
 
+.url {
+    color: rgb(32, 107, 196)
+}
+
+.url-visited {
+    color: #7e45b3;
+}
+
 .website-card-status {
     opacity: 0.5;
 }
@@ -24,11 +32,6 @@
 .website-card-titles div {
     text-overflow: ellipsis;
     overflow: hidden;
-}
-
-/* Color URL ellipsis */ 
-.website-card-titles div:first-of-type {
-    color: rgb(32, 107, 196)
 }
 
 /* Make empty titles take up space by placing an unselectable zero-width space after them */

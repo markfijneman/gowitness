@@ -90,13 +90,13 @@
                   {{ end }}
                 {{ end }}
                 
-                <div class="gallery-card-titles">
-                  <div data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .URL }}"><a href='{{ .URL }}' target="_blank">{{ .Data.URL }}</a></div>
-                  <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Title }}"><span>{{ .Data.Title }}</span></div>
-                </div>
-                
-                <div class="card-actions">
-                  <a href="{{ .Data.URL }}" target="_blank" class="btn btn-primary ms-auto">Visit URL</a>
+                <div class="website-card-titles">
+                  <div class="{{ if .Data.Visited }}url-visited{{ else }}url{{ end }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .Data.URL }}">
+                    <a class="{{ if .Data.Visited }}url-visited{{ else }}url{{ end }}" href='{{ .Data.URL }}' data-visit-id='{{ .Data.ID }}' target="_blank">{{ .Data.URL }}</a>
+                  </div>
+                  <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Data.Title }}">
+                    <span>{{ .Data.Title }}</span>
+                  </div>
                 </div>
               </div>
 

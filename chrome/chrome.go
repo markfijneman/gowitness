@@ -174,6 +174,7 @@ func (chrome *Chrome) StoreRequest(db *gorm.DB, preflight *PreflightResult, scre
 		Title:          preflight.HTTPTitle,
 		Filename:       filename,
 		IsPDF:          chrome.AsPDF,
+		Visited:        false,
 	}
 
 	// if screenshots need to be saved to the database, do that.
