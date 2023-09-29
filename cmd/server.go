@@ -100,7 +100,7 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 			"HasPrefix": strings.HasPrefix,
 			"HasSuffix": strings.HasSuffix,
 		}
-		tmpl := template.Must(template.New("").Funcs(funcMap).ParseFS(Embedded, "web/ui-templates/*.html"))
+		tmpl := template.Must(template.New("").Funcs(funcMap).ParseFS(Embedded, "web/ui-templates/*.html", "web/ui-templates/components/*.html"))
 		r.SetHTMLTemplate(tmpl)
 
 		// web ui routes

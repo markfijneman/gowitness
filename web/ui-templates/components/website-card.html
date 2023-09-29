@@ -1,0 +1,142 @@
+{{ define "website-card" }}
+  <div class="card card-sm">
+    <!-- Status code -->
+    {{ if (eq 0 .ResponseCode)}}
+      <!-- no status code. -->
+    {{ else }}
+      {{ if and (ge .ResponseCode 200) (le .ResponseCode 299) }}
+        <div class="card-status-top bg-green website-card-status"></div>
+      {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
+        <div class="card-status-top bg-blue website-card-status"></div>
+      {{ else if and (ge .ResponseCode 400) (le .ResponseCode 499) }}
+        <div class="card-status-top bg-yellow website-card-status"></div>
+      {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
+        <div class="card-status-top bg-red website-card-status"></div>
+      {{ else }}
+        <div class="card-status-top bg-gray-100 website-card-status"></div>
+      {{ end }}
+    {{ end }}
+
+    <div class="card-header d-flex align-items-center">
+      <div class="website-card-titles">
+        <div class="{{ if .Visited }}url-visited{{ else }}url{{ end }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ .URL }}">
+          <a class="{{ if .Visited }}url-visited{{ else }}url{{ end }}" href='{{ .URL }}' data-visit-id='{{ .ID }}' target="_blank">{{ .URL }}</a>
+        </div>
+        <div class="text-muted" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ .Title }}">
+          <span>{{ .Title }}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="card-body p-0 website-card-screenshot">
+      {{ if .IsPDF }}
+        <embed src='{{ URL "/screenshots/" }}{{ .Filename }}' type="application/pdf" frameBorder="0" scrolling="auto"
+          height="100%" width="100%"></embed>
+        {{ else if .Screenshot }}
+        <a class="d-block">
+          <img loading="lazy" src="data:image/png;base64,{{ .Screenshot }}" alt="Screenshot">
+        </a>
+      {{ else }}
+        <a class="chocolat-image" href='{{ URL "/screenshots/" }}{{ .Filename }}' class="d-block">
+          <img loading="lazy" src='{{ URL "/screenshots/" }}{{ .Filename }}'
+            onerror="this.onerror=null; this.src='{{ URL "/assets/img/blank.png" }}'" />
+        </a>
+      {{ end }}
+    </div>
+
+    <div class="card-footer website-card-footer">
+      <div class="d-flex align-items-center">
+        <div class="website-card-badges">
+          <!-- Status code -->
+          {{ if (eq 0 .ResponseCode) }}
+            <!-- no status code. -->
+          {{ else }}
+            {{ if (eq 200 .ResponseCode) }}
+              <!-- hide status code 200 -->
+            {{ else if and (ge .ResponseCode 201) (le .ResponseCode 299) }}
+            <span class="badge bg-green-lt">{{ .ResponseCode }}</span>
+            {{ else if and (ge .ResponseCode 300) (le .ResponseCode 399) }}
+            <span class="badge bg-blue-lt">{{ .ResponseCode }}</span>
+            {{ else if and (ge .ResponseCode 400) (le .ResponseCode 499) }}
+            <span class="badge bg-yellow-lt">{{ .ResponseCode }}</span>
+            {{ else if and (ge .ResponseCode 500) (le .ResponseCode 600) }}
+            <span class="badge bg-red-lt">{{ .ResponseCode }}</span>
+            {{ else }}
+            <span class="badge bg-gray-200">{{ .ResponseCode }}</span>
+            {{ end }}
+          {{ end }}
+
+          <!-- Interesting data in DOM -->
+          {{ if or (HasPrefix .DOM "<html><head><meta name=\"color-scheme\" content=\"light dark\"></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">read tcp4") (HasPrefix .DOM "<html><head><meta name=\"color-scheme\" content=\"light dark\"></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\">dial tcp4") }}
+            <span class="badge bg-red-lt">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-circle website-card-badge-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+                <path d="M12 8v4"></path>
+                <path d="M12 16h.01"></path>
+              </svg>
+              {{ if HasSuffix .DOM "i/o timeout\n</pre></body></html>" }}
+                i/o timeout
+              {{ else if HasSuffix .DOM "connection refused\n</pre></body></html>" }}
+                connection refused
+              {{ end }}
+            </span>
+          {{ end }}
+
+          <!-- Generator meta tag -->
+          {{ if not (eq (.GetMetaTag "generator") "") }}
+            <span class="badge bg-purple-lt">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-app-window website-card-badge-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"></path>
+                <path d="M6 8h.01"></path>
+                <path d="M9 8h.01"></path>
+              </svg>
+              {{ .GetMetaTag "generator" }}
+            </span>
+          {{ end }}
+
+          <!-- Interesting headers -->
+          {{ if not (eq (.GetHeader "Server") "") }}
+            <span class="badge bg-cyan-lt">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-server website-card-badge-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M3 4m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"></path>
+                <path d="M3 12m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"></path>
+                <path d="M7 8l0 .01"></path>
+                <path d="M7 16l0 .01"></path>
+              </svg>
+              {{ .GetHeader "Server" }}
+            </span>
+          {{ end }}
+          {{ if not (eq (.GetHeader "X-Powered-By") "") }}
+            <span class="badge bg-cyan-lt">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-bolt website-card-badge-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"></path>
+              </svg>
+              {{ .GetHeader "X-Powered-By" }}
+            </span>
+          {{ end }}
+
+          <!-- Technologies -->
+          {{ range .Technologies }}
+          <span class="badge bg-indigo-lt">{{ .Value}}</span>
+          {{ end }}
+        </div>
+        <div class="card-actions">
+          <a href='{{ URL "/details/" }}{{ .ID }}' data-bs-toggle="tooltip" data-bs-placement="top" title="View details" class="btn-action">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-info" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+              <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+              <path d="M11 14h1v4h1"></path>
+              <path d="M12 11h.01"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{{ end }}
