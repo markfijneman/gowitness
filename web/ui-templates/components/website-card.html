@@ -34,7 +34,7 @@
         <embed src='{{ URL "/screenshots/" }}{{ .Filename }}' type="application/pdf" frameBorder="0" scrolling="auto"
           height="100%" width="100%"></embed>
         {{ else if .Screenshot }}
-        <a class="d-block">
+        <a class="d-block chocolat-image" href="data:image/png;base64,{{ .Screenshot }}">
           <img loading="lazy" src="data:image/png;base64,{{ .Screenshot }}" alt="Screenshot">
         </a>
       {{ else }}
