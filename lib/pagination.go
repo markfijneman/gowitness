@@ -70,15 +70,16 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 	// Get size of results
 	query.Model(data).Count(&count)
 
-	// Run query
-	if err := query.Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
-		return nil, err
-	}
-
+	// Compute offset
 	if p.CurrPage == 1 {
 		offset = 0
 	} else {
 		offset = (p.CurrPage - 1) * p.Limit
+	}
+
+	// Run query
+	if err := query.Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
+		return nil, err
 	}
 
 	pagination.Count = count
