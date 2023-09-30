@@ -431,10 +431,14 @@ func galleryHandler(c *gin.Context) {
 		return
 	}
 
+	query := c.Query("q")
+	fmt.Println("q:" + query)
+
 	pager := &lib.Pagination{
 		DB:       rsDB,
 		CurrPage: currPage,
 		Limit:    limit,
+		Query:    query,
 	}
 
 	// perception hashing
@@ -452,10 +456,16 @@ func galleryHandler(c *gin.Context) {
 		return
 	}
 
+	title := "Gallery"
+	if query != "" {
+		title += " - searching for \"" + query + "\""
+	}
+
 	c.HTML(http.StatusOK, "gallery.html", gin.H{
 		"Page":  "gallery",
-		"Title": "Gallery",
+		"Title": title,
 		"Data":  page,
+		"Query": query,
 	})
 }
 

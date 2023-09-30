@@ -13,7 +13,9 @@ Inspiration for `gowitness` comes from [Eyewitness](https://github.com/ChrisTrun
 Some changes compared to the [original](https://github.com/sensepost/gowitness) project:
 - Improved UI & design
 - Screenshots open in a dialog instead of a separate page when clicked
+- Server keeps track of clicked links and makes them purple
 - Added more badges for server information and software ('generator' meta tag)
+- Fast gallery search
 
 ## 📃 Documentation
 For installation information and other documentation, please refer to the wiki of the original project [here](https://github.com/sensepost/gowitness/wiki).

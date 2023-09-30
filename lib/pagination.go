@@ -28,11 +28,11 @@ type Pagination struct {
 	CurrPage int
 	Limit    int
 	OrderBy  []string
+	Query    string
 }
 
 // Page pages a dataset
 func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
-
 	var pagination PaginationPage
 	var count int64
 	var offset int
@@ -54,16 +54,31 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 		pagination.Ordered = false
 	}
 
-	db.Model(data).Count(&count)
+	// Build query
+	query := db.Preload("Technologies").Preload("Headers")
+
+	// Add filters to the query for search terms if provided
+	if p.Query != "" {
+		search := "%" + p.Query + "%"
+
+		query = query.
+			Where("URL LIKE ?", search).
+			Or("Title LIKE ?", search).
+			Or("DOM LIKE ?", search)
+	}
+
+	// Get size of results
+	query.Model(data).Count(&count)
+
+	// Run query
+	if err := query.Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
+		return nil, err
+	}
 
 	if p.CurrPage == 1 {
 		offset = 0
 	} else {
 		offset = (p.CurrPage - 1) * p.Limit
-	}
-
-	if err := db.Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
-		return nil, err
 	}
 
 	pagination.Count = count

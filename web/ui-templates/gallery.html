@@ -19,16 +19,40 @@
       <div class="col">
         <!-- Page pre-title -->
         <div class="page-pretitle">
-          {{ .Data.Count }} URLs
+          {{ .Data.Count }}
+          {{ if (eq .Query "") }}
+            URLs
+          {{ else }}
+            results
+          {{ end }}
         </div>
         <h2 class="page-title">
-          Gallery View
+          Gallery
+          {{ if (ne .Query "" ) }}
+          - searching for "{{ .Query }}"
+          {{ end }}
         </h2>
       </div>
 
       <!-- Page title actions -->
       <div class="col-12 col-md-auto ms-auto d-print-none">
         <div class="btn-list">
+          {{/* TODO temp search box */}}
+          <form action='{{ URL "/gallery" }}' method="get">
+            <div class="input-icon">
+              <span class="input-icon-addon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                  stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <circle cx="10" cy="10" r="7" />
+                  <line x1="21" y1="21" x2="15" y2="15" />
+                </svg>
+              </span>
+              <input type="text" value="{{ .Query }}" class="form-control" placeholder="Search…" name="q"
+                aria-label="Search">
+            </div>
+          </form>
+                
           {{ if .Data.Ordered }}
           <a href='{{ URL "/gallery" }}?perception_sort=false&limit={{ .Data.Limit }}&page={{ .Data.Page }}'
             class="btn btn-primary d-none d-sm-inline-block">
@@ -74,10 +98,6 @@
         <div class="container-xl d-flex flex-column justify-content-center">
           <div class="empty">
             <p class="empty-title h3">No results found</p>
-            <p class="empty-subtitle text-muted">
-              Double check that your report server can see the database.
-              Check out the <kbd>--db-path</kbd> flag for more information.
-            </p>
           </div>
         </div>
       {{ else }}
@@ -98,7 +118,7 @@
     <div class="d-flex">
       <div class="btn-group ms-auto">
         <!-- previous -->
-        <a href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.PrevPage }}'
+        <a href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.PrevPage }}{{ if .Query }}&q={{ .Query }}{{ end }}'
             tabindex="-1" {{ if le .Data.Page 1 }}aria-disabled="true" {{ end }}
             class="btn btn-outline-primary d-none d-sm-inline-block {{ if le .Data.Page 1 }}disabled{{ end }}"
             style="border-right: 0px;">
@@ -110,7 +130,7 @@
           Previous
         </a>
         
-        <select class="form-select" style="border-radius: 0px; border-color: #206bc4;" onChange="window.location.href = '{{ URL "/gallery" }}?{{ if $.Data.Ordered }}perception_sort=true&{{ end }}limit={{ $.Data.Limit }}&page=' + this.value">
+        <select class="form-select" style="border-radius: 0px; border-color: #206bc4;" onChange="window.location.href = '{{ URL "/gallery" }}?{{ if $.Data.Ordered }}perception_sort=true&{{ end }}limit={{ $.Data.Limit }}&page=' + this.value + '{{ if .Query }}&q={{ .Query }}{{ end }}'">
           <!-- previous links -->
           {{ range $p := .Data.PrevPageRange }}
             <option value="{{ $p }}">
@@ -130,7 +150,7 @@
         </select>
 
         <!-- next -->
-        <a href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.NextPage }}'
+        <a href='{{ URL "/gallery" }}?{{ if .Data.Ordered }}perception_sort=true&{{ end }}limit={{ .Data.Limit }}&page={{ .Data.NextPage }}{{ if .Query }}&q={{ .Query }}{{ end }}'
           class="btn btn-outline-primary d-none d-sm-inline-block {{ if eq (len .Data.NextPageRange) 0 }}disabled{{ end }}"
           style="border-left: 0px;">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
