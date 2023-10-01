@@ -55,7 +55,7 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 		log := options.Logger
 
 		if !strings.Contains(options.ServerAddr, "localhost") {
-			log.Warn().Msg("exposing this server to other networks is dangerous! see the server command help for more information")
+			log.Warn().Msg("exposing this server to other networks might be dangerous! see the server command help for more information")
 		}
 
 		if !strings.HasPrefix(options.BasePath, "/") {
@@ -103,16 +103,40 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 		tmpl := template.Must(template.New("").Funcs(funcMap).ParseFS(Embedded, "web/ui-templates/*.html", "web/ui-templates/components/*.html"))
 		r.SetHTMLTemplate(tmpl)
 
+		// Basic HTTP authentication
+		// Check if parameter is formatted correctly
+		if options.Auth != "" {
+			if !strings.Contains(options.Auth, ":") {
+				log.Fatal().Str("auth", options.Auth).Msg("auth parameter incorrectly formatted")
+				os.Exit(-1)
+			} else {
+				log.Info().Msg("basic http authentication enabled")
+			}
+		}
+
+		var r_group *gin.RouterGroup
+		if strings.Contains(options.Auth, ":") {
+			credentials := strings.Split(options.Auth, ":")
+			username := credentials[0]
+			password := credentials[1]
+
+			r_group = r.Group("/", gin.BasicAuth(gin.Accounts{
+				username: password,
+			}))
+		} else {
+			r_group = r.Group("/")
+		}
+
 		// web ui routes
-		r.GET("/", dashboardHandler)
-		r.GET("/gallery", galleryHandler)
-		r.GET("/table", tableHandler)
-		r.GET("/details/:id", detailHandler)
-		r.GET("/details/:id/dom", detailDOMDownloadHandler)
-		r.GET("/submit", getSubmitHandler)
-		r.POST("/submit", submitHandler)
-		r.GET("/search", searchHandler)
-		r.POST("/search", searchHandler)
+		r_group.GET("/", dashboardHandler)
+		r_group.GET("/gallery", galleryHandler)
+		r_group.GET("/table", tableHandler)
+		r_group.GET("/details/:id", detailHandler)
+		r_group.GET("/details/:id/dom", detailDOMDownloadHandler)
+		r_group.GET("/submit", getSubmitHandler)
+		r_group.POST("/submit", submitHandler)
+		r_group.GET("/search", searchHandler)
+		r_group.POST("/search", searchHandler)
 
 		// error routes
 		r.NoRoute(func(c *gin.Context) {
@@ -127,7 +151,7 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 
 		// assets & screenshots
 		r.StaticFS("/assets/", http.FS(assetFs))
-		r.StaticFS("/screenshots", http.Dir(options.ScreenshotPath))
+		r_group.StaticFS("/screenshots", http.Dir(options.ScreenshotPath))
 
 		// favicon
 		r.GET("/favicon.ico", func(c *gin.Context) {
@@ -135,7 +159,7 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 		})
 
 		// json api routes
-		api := r.Group("/api")
+		api := r_group.Group("/api")
 		{
 			api.GET("/list", apiURLHandler)
 			api.GET("/search", apiSearchHandler)
@@ -158,6 +182,7 @@ func init() {
 	serverCmd.Flags().StringVarP(&options.ServerAddr, "address", "a", "localhost:7171", "server listening address")
 	serverCmd.Flags().BoolVarP(&options.AllowInsecureURIs, "allow-insecure-uri", "A", false, "allow uris that dont start with http(s)")
 	serverCmd.Flags().StringVarP(&options.BasePath, "base-path", "b", "/", "set the servers base path (useful for some reverse proxy setups)")
+	serverCmd.Flags().StringVarP(&options.Auth, "auth", "u", "/", "enables basic HTTP authentication with syntax username:password")
 }
 
 // middleware

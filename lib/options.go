@@ -25,6 +25,7 @@ type Options struct {
 
 	// Server command
 	AllowInsecureURIs bool
+	Auth              string
 
 	// File command
 	File string
