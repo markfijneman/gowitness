@@ -182,7 +182,7 @@ func init() {
 	serverCmd.Flags().StringVarP(&options.ServerAddr, "address", "a", "localhost:7171", "server listening address")
 	serverCmd.Flags().BoolVarP(&options.AllowInsecureURIs, "allow-insecure-uri", "A", false, "allow uris that dont start with http(s)")
 	serverCmd.Flags().StringVarP(&options.BasePath, "base-path", "b", "/", "set the servers base path (useful for some reverse proxy setups)")
-	serverCmd.Flags().StringVarP(&options.Auth, "auth", "u", "/", "enables basic HTTP authentication with syntax username:password")
+	serverCmd.Flags().StringVarP(&options.Auth, "auth", "u", "", "enables basic HTTP authentication with syntax username:password")
 }
 
 // middleware
