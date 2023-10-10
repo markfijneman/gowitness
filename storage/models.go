@@ -26,6 +26,7 @@ type URL struct {
 	PerceptionHash string
 	DOM            string
 	Screenshot     string
+	Tag            string
 	Visited        bool
 
 	TLS TLS

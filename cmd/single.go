@@ -26,6 +26,8 @@ $ gowitness single --destination ~/screenshots -o twitter.png https://twitter.co
 	Run: func(cmd *cobra.Command, args []string) {
 		log := options.Logger
 
+		tag := options.Tag
+
 		// prepare target
 		url, err := url.Parse(args[0])
 		if err != nil {
@@ -52,6 +54,7 @@ $ gowitness single --destination ~/screenshots -o twitter.png https://twitter.co
 			URL:                url,
 			ScreenshotPath:     options.ScreenshotPath,
 			ScreenshotFileName: options.ScreenshotFileName,
+			Tag:                tag,
 		}
 
 		if err := p.Gowitness(); err != nil {
@@ -64,4 +67,5 @@ func init() {
 	rootCmd.AddCommand(singleCmd)
 
 	singleCmd.Flags().StringVarP(&options.ScreenshotFileName, "output", "o", "", "write the screenshot to this file")
+	singleCmd.Flags().StringVarP(&options.Tag, "tag", "", "", "tag to add to site entries")
 }

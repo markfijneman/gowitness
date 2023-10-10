@@ -32,6 +32,8 @@ $ gowitness file -f <( shuf domains ) --no-http`,
 		}
 		defer f.Close()
 
+		tag := options.Tag
+
 		db, err := db.Get()
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to get a db handle")
@@ -66,6 +68,7 @@ $ gowitness file -f <( shuf domains ) --no-http`,
 						Chrome:         chrm,
 						URL:            url,
 						ScreenshotPath: options.ScreenshotPath,
+						Tag:            tag,
 					}
 
 					if err := p.Gowitness(); err != nil {
@@ -87,6 +90,7 @@ func init() {
 	fileCmd.Flags().IntVarP(&options.Threads, "threads", "t", 4, "threads used to run")
 	fileCmd.Flags().BoolVar(&options.NoHTTPS, "no-https", false, "do not prefix https:// where missing")
 	fileCmd.Flags().BoolVar(&options.NoHTTP, "no-http", false, "do not prefix http:// where missing")
+	fileCmd.Flags().StringVarP(&options.Tag, "tag", "", "", "tag to add to site entries")
 
 	cobra.MarkFlagRequired(fileCmd.Flags(), "file")
 }

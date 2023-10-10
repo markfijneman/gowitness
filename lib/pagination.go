@@ -29,6 +29,7 @@ type Pagination struct {
 	Limit    int
 	OrderBy  []string
 	Query    string
+	Tag      string
 }
 
 // Page pages a dataset
@@ -61,10 +62,20 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 	if p.Query != "" {
 		search := "%" + p.Query + "%"
 
+		query = query.Where(
+			db.
+				Where("URL LIKE ?", search).
+				Or("Title LIKE ?", search).
+				Or("DOM LIKE ?", search),
+		)
+	}
+
+	// Add filters to the query for tag if provided
+	if p.Tag != "" {
+		search := p.Tag
+
 		query = query.
-			Where("URL LIKE ?", search).
-			Or("Title LIKE ?", search).
-			Or("DOM LIKE ?", search)
+			Where("Tag LIKE ?", search)
 	}
 
 	// Get size of results

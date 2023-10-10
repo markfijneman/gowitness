@@ -29,6 +29,7 @@ type Options struct {
 
 	// File command
 	File string
+	Tag  string
 
 	// Scan command
 	ScanCidr     []string

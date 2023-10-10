@@ -35,6 +35,9 @@ type Processor struct {
 
 	// persistence id
 	urlid uint
+
+	// tag
+	Tag string
 }
 
 // Gowitness processes a URL by:
@@ -145,7 +148,7 @@ func (p *Processor) persistRequest() (err error) {
 	}
 
 	p.Logger.Debug().Str("url", p.URL.String()).Msg("storing request data")
-	if p.urlid, err = p.Chrome.StoreRequest(p.Db, p.preflightResult, p.screenshotResult, p.fn); err != nil {
+	if p.urlid, err = p.Chrome.StoreRequest(p.Db, p.preflightResult, p.screenshotResult, p.fn, p.Tag); err != nil {
 		return
 	}
 

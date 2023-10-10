@@ -333,7 +333,7 @@ func submitHandler(c *gin.Context) {
 
 	var rid uint
 	if rsDB != nil {
-		if rid, err = chrm.StoreRequest(rsDB, preflight, result, fn); err != nil {
+		if rid, err = chrm.StoreRequest(rsDB, preflight, result, fn, ""); err != nil { // TODO add tag input to server submit URL page
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"status":  "error",
 				"message": err.Error(),
@@ -457,13 +457,14 @@ func galleryHandler(c *gin.Context) {
 	}
 
 	query := c.Query("q")
-	fmt.Println("q:" + query)
+	tag := c.Query("tag")
 
 	pager := &lib.Pagination{
 		DB:       rsDB,
 		CurrPage: currPage,
 		Limit:    limit,
 		Query:    query,
+		Tag:      tag,
 	}
 
 	// perception hashing
@@ -491,6 +492,7 @@ func galleryHandler(c *gin.Context) {
 		"Title": title,
 		"Data":  page,
 		"Query": query,
+		"Tag":   tag,
 	})
 }
 
