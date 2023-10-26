@@ -162,6 +162,43 @@
                     </div>
                   </div>
                 </div>
+                <div class="card-body">
+                  <div class="align-items-center">
+                    <div class="col-auto">
+                      <!-- <span class="hidden text-white avatar">
+                        
+                      </span> -->
+                    </div>
+                    <div class="col">
+                      <div class="font-weight-medium">
+                        <table class="table table-sm table-borderless dashboard-count-table">
+                          <thead>
+                            <tr>
+                              <th>Tag</th>
+                              <th class="text-end">Count</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {{ range .Tags }}
+                              <tr>
+                                <td>
+                                  <div class="progressbg">
+                                    <div class="progress progressbg-progress">
+                                      <div class="progress-bar bg-pink-lt" style="width: {{ percentage .Count $.MaxTagCount }}%" role="progressbar"></div>
+                                    </div>
+                                    <div class="progressbg-text"><a href="{{ URL "/gallery" }}?tag={{ .Tag }}" class="a-no-color">{{ .Tag }}</a></div>
+                                  </div>
+                                </td>
+                                <td class="w-1 fw-bold text-end">{{ .Count }}
+                                </td>
+                              </tr>
+                            {{ end }}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           {{ end }}

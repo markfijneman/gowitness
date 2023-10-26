@@ -12,6 +12,14 @@
     }
 }
 
+.a-no-color {
+    color: inherit;
+}
+
+.dashboard-count-table {
+    margin-bottom: 0px !important;
+}
+
 .gallery-sort-dropdown-button {
     text-transform: capitalize;
 }

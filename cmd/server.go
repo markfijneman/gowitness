@@ -99,6 +99,9 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 			},
 			"HasPrefix": strings.HasPrefix,
 			"HasSuffix": strings.HasSuffix,
+			"percentage": func(value int64, max int64) float64 {
+				return float64(value) / float64(max) * 100.0
+			},
 		}
 		tmpl := template.Must(template.New("").Funcs(funcMap).ParseFS(Embedded, "web/ui-templates/*.html", "web/ui-templates/components/*.html"))
 		r.SetHTMLTemplate(tmpl)
@@ -244,6 +247,11 @@ func themeChooser(choice *string) gin.HandlerFunc {
 // reporting web ui handlers
 // --
 
+type TagCount struct {
+	Tag   string
+	Count int64
+}
+
 // dashboardHandler handles dashboard requests
 func dashboardHandler(c *gin.Context) {
 
@@ -268,8 +276,22 @@ func dashboardHandler(c *gin.Context) {
 	var techCount int64
 	rsDB.Model(&storage.Technologie{}).Distinct().Count(&techCount)
 
+	var tags []TagCount
+	rsDB.Model(&storage.URL{}).
+		Select("Tag, COUNT(*) as count").
+		Group("Tag").
+		Order("count DESC").
+		Pluck("Tag, COUNT(*)", &tags)
+
 	var tagCount int64
 	rsDB.Model(&storage.URL{}).Distinct("Tag").Count(&tagCount)
+
+	var maxTagCount int64
+	for _, tag := range tags {
+		if tag.Count > maxTagCount {
+			maxTagCount = tag.Count
+		}
+	}
 
 	c.HTML(http.StatusOK, "dashboard.html", gin.H{
 		"Page":         "dashboard",
@@ -279,7 +301,9 @@ func dashboardHandler(c *gin.Context) {
 		"DNSNameCount": certDNSNameCount,
 		"HeaderCount":  headerCount,
 		"TechCount":    techCount,
+		"Tags":         tags,
 		"TagCount":     tagCount,
+		"MaxTagCount":  maxTagCount,
 	})
 }
 
