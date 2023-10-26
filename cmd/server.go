@@ -487,18 +487,23 @@ func galleryHandler(c *gin.Context) {
 		return
 	}
 
+	// Count the total number of tags, used to determine if the tag filter input is shown
+	var tagCount int64
+	rsDB.Model(&storage.URL{}).Distinct("Tag").Count(&tagCount)
+
 	title := "Gallery"
 	if query != "" {
 		title += " - searching for \"" + query + "\""
 	}
 
 	c.HTML(http.StatusOK, "gallery.html", gin.H{
-		"Page":  "gallery",
-		"Title": title,
-		"Data":  page,
-		"Query": query,
-		"Tag":   tag,
-		"Sort":  sort,
+		"Page":     "gallery",
+		"Title":    title,
+		"Data":     page,
+		"Query":    query,
+		"Tag":      tag,
+		"TagCount": tagCount,
+		"Sort":     sort,
 	})
 }
 
