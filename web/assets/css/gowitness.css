@@ -12,6 +12,10 @@
     }
 }
 
+.gallery-sort-dropdown-button {
+    text-transform: capitalize;
+}
+
 .url {
     color: rgb(32, 107, 196)
 }

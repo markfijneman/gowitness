@@ -19,7 +19,6 @@ type PaginationPage struct {
 	PrevPageRange []int
 	NextPage      int
 	NextPageRange []int
-	Ordered       bool
 }
 
 // Pagination has options for a Page
@@ -50,9 +49,6 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 		for _, order := range p.OrderBy {
 			db = db.Order(order)
 		}
-		pagination.Ordered = true
-	} else {
-		pagination.Ordered = false
 	}
 
 	// Build query

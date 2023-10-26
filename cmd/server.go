@@ -458,6 +458,7 @@ func galleryHandler(c *gin.Context) {
 
 	query := c.Query("q")
 	tag := c.Query("tag")
+	sort := c.Query("sort")
 
 	pager := &lib.Pagination{
 		DB:       rsDB,
@@ -467,8 +468,8 @@ func galleryHandler(c *gin.Context) {
 		Tag:      tag,
 	}
 
-	// perception hashing
-	if strings.TrimSpace(c.Query("perception_sort")) == "true" {
+	// Perception sort
+	if sort == "perception" {
 		pager.OrderBy = []string{"perception_hash desc"}
 	}
 
@@ -493,6 +494,7 @@ func galleryHandler(c *gin.Context) {
 		"Data":  page,
 		"Query": query,
 		"Tag":   tag,
+		"Sort":  sort,
 	})
 }
 
