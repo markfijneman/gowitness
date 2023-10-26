@@ -37,24 +37,6 @@
       <!-- Page title actions -->
       <div class="col-12 col-md-auto ms-auto d-print-none">
         <div class="btn-list">
-          {{/* Tag filter */}}
-          {{ if ge .TagCount 1 }}
-            <form action='{{ URL "/gallery" }}' method="get" style="max-width: 160px">
-              <div class="input-icon">
-                <span class="input-icon-addon">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
-                    <path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z"></path>
-                  </svg>
-                </span>
-                <input type="text" value="{{ .Tag }}" class="form-control" placeholder="Filter by tag…" name="tag" aria-label="Search">
-                {{ if .Query }}<input type="hidden" value="{{ .Query }}" name="q">{{ end }}
-                {{ if .Sort }}<input type="hidden" value="{{ .Sort }}" name="sort">{{ end }}
-              </div>
-            </form>
-          {{ end }}
-
           {{/* Search box */}}
           <form action='{{ URL "/gallery" }}' method="get">
             <div class="input-icon">
@@ -71,18 +53,44 @@
               {{ if .Sort }}<input type="hidden" value="{{ .Sort }}" name="sort">{{ end }}
             </div>
           </form>
+
+          {{/* Tag filter */}}
+          {{ if or (ge .TagCount 1) (.Tag) }}
+            <button type="button" class="btn dropdown-toggle {{ if .Tag }}bg-pink-lt{{ end }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+                <path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z"></path>
+              </svg>
+              {{ if .Tag }}
+                {{ .Tag }} ({{ .CurrentTagCount }})
+              {{ else }}
+                Filter by tag...
+              {{ end }}
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}">
+                None
+              </a>
+              {{ range .Tags }}
+                <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ $.Data.Limit }}&page={{ $.Data.Page }}{{ if $.Query }}&q={{ $.Query }}{{ end }}&tag={{ .Tag }}{{ if $.Sort }}&sort={{ $.Sort }}{{ end }}">
+                  {{ .Tag }} ({{ .Count }})
+                </a>
+              {{ end }}
+            </div>
+          {{ end }}
           
           {{/* Sort */}}
           <button type="button" class="btn dropdown-toggle gallery-sort-dropdown-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-sort-descending-2" width="24"
             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
             stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <rect x="5" y="5" width="5" height="5" rx=".5"></rect>
-            <rect x="5" y="14" width="5" height="5" rx=".5"></rect>
-            <path d="M14 15l3 3l3 -3"></path>
-            <path d="M17 18v-12"></path>
-          </svg>
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <rect x="5" y="5" width="5" height="5" rx=".5"></rect>
+              <rect x="5" y="14" width="5" height="5" rx=".5"></rect>
+              <path d="M14 15l3 3l3 -3"></path>
+              <path d="M17 18v-12"></path>
+            </svg>
             {{ if .Sort }}
               {{ .Sort }}
             {{ else }}

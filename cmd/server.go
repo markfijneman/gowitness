@@ -279,12 +279,12 @@ func dashboardHandler(c *gin.Context) {
 	var tags []TagCount
 	rsDB.Model(&storage.URL{}).
 		Select("Tag, COUNT(*) as count").
+		Where("Tag <> ''"). // Exclude empty tags
 		Group("Tag").
 		Order("count DESC").
 		Pluck("Tag, COUNT(*)", &tags)
 
-	var tagCount int64
-	rsDB.Model(&storage.URL{}).Distinct("Tag").Count(&tagCount)
+	tagCount := len(tags)
 
 	var maxTagCount int64
 	for _, tag := range tags {
@@ -511,9 +511,25 @@ func galleryHandler(c *gin.Context) {
 		return
 	}
 
+	var tags []TagCount
+	rsDB.Model(&storage.URL{}).
+		Select("Tag, COUNT(*) as count").
+		Where("Tag <> ''"). // Exclude empty tags
+		Group("Tag").
+		Order("count DESC").
+		Pluck("Tag, COUNT(*)", &tags)
+
 	// Count the total number of tags, used to determine if the tag filter input is shown
-	var tagCount int64
-	rsDB.Model(&storage.URL{}).Distinct("Tag").Count(&tagCount)
+	tagCount := len(tags)
+
+	// Get count of selected tag
+	var currentTagCount int64
+	for _, tempTag := range tags {
+		if tempTag.Tag == tag {
+			currentTagCount = tempTag.Count
+			break
+		}
+	}
 
 	title := "Gallery"
 	if query != "" {
@@ -521,13 +537,15 @@ func galleryHandler(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "gallery.html", gin.H{
-		"Page":     "gallery",
-		"Title":    title,
-		"Data":     page,
-		"Query":    query,
-		"Tag":      tag,
-		"TagCount": tagCount,
-		"Sort":     sort,
+		"Page":            "gallery",
+		"Title":           title,
+		"Data":            page,
+		"Query":           query,
+		"Tag":             tag,
+		"CurrentTagCount": currentTagCount,
+		"Tags":            tags,
+		"TagCount":        tagCount,
+		"Sort":            sort,
 	})
 }
 
