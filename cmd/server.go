@@ -268,6 +268,9 @@ func dashboardHandler(c *gin.Context) {
 	var techCount int64
 	rsDB.Model(&storage.Technologie{}).Distinct().Count(&techCount)
 
+	var tagCount int64
+	rsDB.Model(&storage.URL{}).Distinct("Tag").Count(&tagCount)
+
 	c.HTML(http.StatusOK, "dashboard.html", gin.H{
 		"Page":         "dashboard",
 		"DBSzie":       fmt.Sprintf("%.2f", float64(size)/1e6),
@@ -276,6 +279,7 @@ func dashboardHandler(c *gin.Context) {
 		"DNSNameCount": certDNSNameCount,
 		"HeaderCount":  headerCount,
 		"TechCount":    techCount,
+		"TagCount":     tagCount,
 	})
 }
 

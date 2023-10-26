@@ -24,6 +24,7 @@
 
       <div class="col-12">
         <div class="row row-cards">
+          {{/* Processed URLs and SQLite Database Size */}}
           <div class="col-sm-6 col-lg-3">
             <div class="card card-sm">
               <div class="card-body">
@@ -54,6 +55,7 @@
             </div>
           </div>
 
+          {{/* Certificates and DNS Names */}}
           <div class="col-sm-6 col-lg-3">
             <div class="card card-sm">
               <div class="card-body">
@@ -84,6 +86,7 @@
             </div>
           </div>
 
+          {{/* Headers */}}
           <div class="col-sm-6 col-lg-3">
             <div class="card card-sm">
               <div class="card-body">
@@ -109,6 +112,7 @@
             </div>
           </div>
 
+          {{/* Unique Technologies */}}
           <div class="col-sm-6 col-lg-3">
             <div class="card card-sm">
               <div class="card-body">
@@ -135,6 +139,32 @@
               </div>
             </div>
           </div>
+
+          {{/* Tags */}}
+          {{ if ge .TagCount 1 }}
+            <div class="col-sm-6 col-lg-3">
+              <div class="card card-sm">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <span class="bg-pink text-white avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                          <path d="M7.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path>
+                          <path d="M3 6v5.172a2 2 0 0 0 .586 1.414l7.71 7.71a2.41 2.41 0 0 0 3.408 0l5.592 -5.592a2.41 2.41 0 0 0 0 -3.408l-7.71 -7.71a2 2 0 0 0 -1.414 -.586h-5.172a3 3 0 0 0 -3 3z"></path>
+                        </svg>
+                      </span>
+                    </div>
+                    <div class="col">
+                      <div class="font-weight-medium">
+                        {{ .TagCount }} Tag{{if not (eq .TagCount 1)}}s{{end}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{ end }}
         </div>
       </div>
 
