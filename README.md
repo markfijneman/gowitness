@@ -17,6 +17,7 @@ Some changes compared to the [original](https://github.com/sensepost/gowitness) 
 - More badges for server information and software ('generator' meta tag)
 - Fast gallery search
 - Screenshot tagging
+- Hide duplicate URLs from gallery
 
 ## 📃 Documentation
 For installation information and other documentation, please refer to the wiki of the original project [here](https://github.com/sensepost/gowitness/wiki).
