@@ -30,7 +30,18 @@ specified will be the target for the final ZIP file that will be created.
 			log.Fatal().Msg("a target file must be specified with --file / -f")
 		}
 
-		tmpl := template.Must(template.ParseFS(Embedded, "web/static-templates/*.html"))
+		funcMap := template.FuncMap{
+			"Contains": func(full string, search string) bool {
+				return strings.Contains(full, search)
+			},
+			"URL": func(url string) string {
+				return options.BasePath + strings.TrimPrefix(url, "/")
+			},
+			"HasPrefix": strings.HasPrefix,
+			"HasSuffix": strings.HasSuffix,
+		}
+
+		tmpl := template.Must(template.New("").Funcs(funcMap).ParseFS(Embedded, "web/static-templates/*.html"))
 		t := tmpl.Lookup("gallery.html")
 
 		// db
@@ -95,11 +106,35 @@ specified will be the target for the final ZIP file that will be created.
 			log.Fatal().Err(err).Msg("failed to write tabler.min.js to file")
 		}
 
+		js2, err := Embedded.ReadFile("web/assets/js/chocolat.js")
+		if err != nil {
+			log.Fatal().Err(err).Msg("could not open embedded javascript")
+		}
+		if err := copyByte(js2, tempDir+"/"+"chocolat.js"); err != nil {
+			log.Fatal().Err(err).Msg("failed to write tabler.min.js to file")
+		}
+
 		css, err := Embedded.ReadFile("web/assets/css/tabler.min.css")
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not open embedded css")
 		}
 		if err := copyByte(css, tempDir+"/"+"tabler.min.css"); err != nil {
+			log.Fatal().Err(err).Msg("failed to write tabler.min.css to file")
+		}
+
+		css2, err := Embedded.ReadFile("web/assets/css/gowitness.css")
+		if err != nil {
+			log.Fatal().Err(err).Msg("could not open embedded css")
+		}
+		if err := copyByte(css2, tempDir+"/"+"gowitness.css"); err != nil {
+			log.Fatal().Err(err).Msg("failed to write tabler.min.css to file")
+		}
+
+		css3, err := Embedded.ReadFile("web/assets/css/chocolat.css")
+		if err != nil {
+			log.Fatal().Err(err).Msg("could not open embedded css")
+		}
+		if err := copyByte(css3, tempDir+"/"+"chocolat.css"); err != nil {
 			log.Fatal().Err(err).Msg("failed to write tabler.min.css to file")
 		}
 
