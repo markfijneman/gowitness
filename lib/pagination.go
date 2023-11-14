@@ -23,12 +23,13 @@ type PaginationPage struct {
 
 // Pagination has options for a Page
 type Pagination struct {
-	DB       *gorm.DB
-	CurrPage int
-	Limit    int
-	OrderBy  []string
-	Query    string
-	Tag      string
+	DB             *gorm.DB
+	CurrPage       int
+	Limit          int
+	OrderBy        []string
+	Query          string
+	Tag            string
+	HideDuplicates bool
 }
 
 // Page pages a dataset
@@ -53,6 +54,12 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 
 	// Build query
 	query := db.Preload("Technologies").Preload("Headers")
+
+	if p.HideDuplicates {
+		// Remove duplicate final URLs
+		// Trim away / so http to https redirects also get filtered out, as those commonly redirect from http://example.com to https://example.com/
+		query = query.Group("trim(final_url, '/')")
+	}
 
 	// Add filters to the query for search terms if provided
 	if p.Query != "" {

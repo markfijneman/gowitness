@@ -487,13 +487,19 @@ func galleryHandler(c *gin.Context) {
 	query := c.Query("q")
 	tag := c.Query("tag")
 	sort := c.Query("sort")
+	hideDuplicatesQ := c.Query("hideDuplicates")
+	hideDuplicates, err := strconv.ParseBool(hideDuplicatesQ)
+	if err != nil {
+		hideDuplicates = false
+	}
 
 	pager := &lib.Pagination{
-		DB:       rsDB,
-		CurrPage: currPage,
-		Limit:    limit,
-		Query:    query,
-		Tag:      tag,
+		DB:             rsDB,
+		CurrPage:       currPage,
+		Limit:          limit,
+		Query:          query,
+		Tag:            tag,
+		HideDuplicates: hideDuplicates,
 	}
 
 	// Sorting methods
@@ -501,6 +507,8 @@ func galleryHandler(c *gin.Context) {
 		pager.OrderBy = []string{"perception_hash desc"}
 	} else if sort == "alphabetic" {
 		pager.OrderBy = []string{"url asc"}
+	} else {
+		pager.OrderBy = []string{"id asc"}
 	}
 
 	var urls []storage.URL
@@ -548,6 +556,7 @@ func galleryHandler(c *gin.Context) {
 		"Tags":            tags,
 		"TagCount":        tagCount,
 		"Sort":            sort,
+		"HideDuplicates":  hideDuplicates,
 	})
 }
 

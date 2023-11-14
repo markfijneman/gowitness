@@ -24,6 +24,14 @@
     text-transform: capitalize;
 }
 
+.gallery-settings-dropdown-button {
+    width: 36px;
+}
+
+.gallery-settings-dropdown-button svg {
+    margin: 0 !important;
+}
+
 .url {
     color: rgb(32, 107, 196)
 }
