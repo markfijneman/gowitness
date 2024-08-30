@@ -54,6 +54,7 @@ type Options struct {
 	NmapService         []string
 	NmapServiceContains string
 	NmapPorts           []int
+	NmapSkipPort        []int
 	NmapScanHostnames   bool
 	NmapOpenPortsOnly   bool
 
