@@ -50,6 +50,9 @@ specified will be the target for the final ZIP file that will be created.
 			log.Fatal().Err(err).Msg("could not get db handle")
 		}
 
+		// Generate missing database values
+		storage.GenerateMissingValues(dbh)
+
 		var urls []storage.URL
 		dbh.Preload("Technologies").Find(&urls)
 

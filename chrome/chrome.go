@@ -172,6 +172,7 @@ func (chrome *Chrome) StoreRequest(db *gorm.DB, preflight *PreflightResult, scre
 		Proto:          preflight.HTTPResponse.Proto,
 		ContentLength:  preflight.HTTPResponse.ContentLength,
 		Title:          preflight.HTTPTitle,
+		MetaGenerator:  storage.GetMetaTag(screenshot.DOM, "generator"),
 		Filename:       filename,
 		IsPDF:          chrome.AsPDF,
 		Tag:            tag,

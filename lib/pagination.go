@@ -91,8 +91,8 @@ func (p *Pagination) Page(data interface{}) (*PaginationPage, error) {
 		offset = (p.CurrPage - 1) * p.Limit
 	}
 
-	// Run query
-	if err := query.Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
+	// Run query, do not load dom since that slows down performance a lot
+	if err := query.Select("id, url, final_url, response_code, title, filename, is_pdf, perception_hash, screenshot, meta_generator, tag, visited").Limit(p.Limit).Offset(offset).Preload("Technologies").Preload("Headers").Find(data).Error; err != nil {
 		return nil, err
 	}
 

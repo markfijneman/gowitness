@@ -89,6 +89,9 @@ $ gowitness server --address 127.0.0.1:9000 --allow-insecure-uri`,
 
 		log.Info().Str("base-path", options.BasePath).Msg("basepath")
 
+		// Generate missing database values
+		storage.GenerateMissingValues(rsDB)
+
 		funcMap := template.FuncMap{
 			"GetTheme": getTheme,
 			"Contains": func(full string, search string) bool {
