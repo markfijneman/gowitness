@@ -493,7 +493,7 @@ func galleryHandler(c *gin.Context) {
 	hideDuplicatesQ := c.Query("hide_duplicates")
 	hideDuplicates, err := strconv.ParseBool(hideDuplicatesQ)
 	if err != nil {
-		hideDuplicates = false
+		hideDuplicates = true
 	}
 
 	pager := &lib.Pagination{
