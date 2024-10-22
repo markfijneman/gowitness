@@ -70,11 +70,11 @@
             </button>
             <div class="dropdown-menu">
               <h6 class="dropdown-header">Filter by tag...</h6>
-              <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hideDuplicates=1{{end}}">
+              <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hide_duplicates=1{{end}}">
                 None
               </a>
               {{ range .Tags }}
-                <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ $.Data.Limit }}&page={{ $.Data.Page }}{{ if $.Query }}&q={{ $.Query }}{{ end }}&tag={{ .Tag }}{{ if $.Sort }}&sort={{ $.Sort }}{{ end }}{{ if $.HideDuplicates}}&hideDuplicates=1{{end}}">
+                <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ $.Data.Limit }}&page={{ $.Data.Page }}{{ if $.Query }}&q={{ $.Query }}{{ end }}&tag={{ .Tag }}{{ if $.Sort }}&sort={{ $.Sort }}{{ end }}{{ if $.HideDuplicates}}&hide_duplicates=1{{end}}">
                   {{ .Tag }} ({{ .Count }})
                 </a>
               {{ end }}
@@ -100,13 +100,13 @@
           </button>
           <div class="dropdown-menu">
             <h6 class="dropdown-header">Sort by...</h6>
-            <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .HideDuplicates}}&hideDuplicates=1{{end}}">
+            <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .HideDuplicates}}&hide_duplicates=1{{end}}">
               Time
             </a>
-            <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}&sort=perception{{ if .HideDuplicates}}&hideDuplicates=1{{end}}">
+            <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}&sort=perception{{ if .HideDuplicates}}&hide_duplicates=1{{end}}">
               Perception
             </a>
-            <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}&sort=alphabetic{{ if .HideDuplicates}}&hideDuplicates=1{{end}}">
+            <a class="dropdown-item" href="{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}&sort=alphabetic{{ if .HideDuplicates}}&hide_duplicates=1{{end}}">
               Alphabetic
             </a>
           </div>
@@ -121,7 +121,7 @@
           </button>
           <div class="dropdown-menu">
             <h6 class="dropdown-header">Settings</h6>
-            <label class="dropdown-item"><input class="form-check-input m-0 me-2" onclick="window.location.href='{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if not .HideDuplicates}}&hideDuplicates=1{{end}}' "type="checkbox" {{ if .HideDuplicates }}checked{{ end }}>Hide duplicates</label>
+            <label class="dropdown-item"><input class="form-check-input m-0 me-2" onclick="window.location.href='{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.Page }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if not .HideDuplicates}}&hide_duplicates=1{{end}}' "type="checkbox" {{ if .HideDuplicates }}checked{{ end }}>Hide duplicates</label>
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@
     <div class="d-flex">
       <div class="btn-group ms-auto">
         <!-- previous -->
-        <a href='{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.PrevPage }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hideDuplicates=1{{end}}'
+        <a href='{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.PrevPage }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hide_duplicates=1{{end}}'
             tabindex="-1" {{ if le .Data.Page 1 }}aria-disabled="true" {{ end }}
             class="btn btn-outline-primary d-none d-sm-inline-block {{ if le .Data.Page 1 }}disabled{{ end }}"
             style="border-right: 0px;">
@@ -171,7 +171,7 @@
           Previous
         </a>
         
-        <select class="form-select" style="border-radius: 0px; border-color: #206bc4;" onChange="window.location.href = '{{ URL "/gallery" }}?limit={{ $.Data.Limit }}&page=' + this.value + '{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hideDuplicates=1{{end}}'">
+        <select class="form-select" style="border-radius: 0px; border-color: #206bc4;" onChange="window.location.href = '{{ URL "/gallery" }}?limit={{ $.Data.Limit }}&page=' + this.value + '{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hide_duplicates=1{{end}}'">
           <!-- previous links -->
           {{ range $p := .Data.PrevPageRange }}
             <option value="{{ $p }}">
@@ -191,7 +191,7 @@
         </select>
 
         <!-- next -->
-        <a href='{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.NextPage }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hideDuplicates=1{{end}}'
+        <a href='{{ URL "/gallery" }}?limit={{ .Data.Limit }}&page={{ .Data.NextPage }}{{ if .Query }}&q={{ .Query }}{{ end }}{{ if .Tag }}&tag={{ .Tag }}{{ end }}{{ if .Sort }}&sort={{ .Sort }}{{ end }}{{ if .HideDuplicates}}&hide_duplicates=1{{end}}'
           class="btn btn-outline-primary d-none d-sm-inline-block {{ if eq (len .Data.NextPageRange) 0 }}disabled{{ end }}"
           style="border-left: 0px;">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"

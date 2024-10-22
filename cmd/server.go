@@ -490,7 +490,7 @@ func galleryHandler(c *gin.Context) {
 	query := c.Query("q")
 	tag := c.Query("tag")
 	sort := c.Query("sort")
-	hideDuplicatesQ := c.Query("hideDuplicates")
+	hideDuplicatesQ := c.Query("hide_duplicates")
 	hideDuplicates, err := strconv.ParseBool(hideDuplicatesQ)
 	if err != nil {
 		hideDuplicates = false
