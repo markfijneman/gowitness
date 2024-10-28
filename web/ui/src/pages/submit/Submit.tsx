@@ -257,12 +257,12 @@ export default function JobSubmissionPage() {
             <div className="flex-1 overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
                 <ScrollArea className="h-[calc(90vh-8rem)] pr-4">
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg font-semibold flex items-center">
-                          <GlobeIcon className="mr-2 h-5 w-5" />
-                          URL Information
+                        <CardTitle className="flex flex-row items-center justify-between">
+                          <CardTitle className="text-xl font-medium">URL Information</CardTitle>
+                          <GlobeIcon className="h-4 w-4 text-muted-foreground" />
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-2">
@@ -278,9 +278,9 @@ export default function JobSubmissionPage() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg font-semibold flex items-center">
-                          <ServerIcon className="mr-2 h-5 w-5" />
-                          Response Details
+                        <CardTitle className="flex flex-row items-center justify-between">
+                          <CardTitle className="text-xl font-medium">Response Details</CardTitle>
+                          <ServerIcon className="h-4 w-4 text-muted-foreground" />
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-2">
@@ -301,9 +301,9 @@ export default function JobSubmissionPage() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg font-semibold flex items-center">
-                          <FileTypeIcon className="mr-2 h-5 w-5" />
-                          Page Information
+                        <CardTitle className="flex flex-row items-center justify-between">
+                          <CardTitle className="text-xl font-medium">Page Information</CardTitle>
+                          <FileTypeIcon className="h-4 w-4 text-muted-foreground" />
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-2">
@@ -326,9 +326,9 @@ export default function JobSubmissionPage() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg font-semibold flex items-center">
-                          <ClockIcon className="mr-2 h-5 w-5" />
-                          Timing Information
+                        <CardTitle className="flex flex-row items-center justify-between">
+                          <CardTitle className="text-xl font-medium">Timing Information</CardTitle>
+                          <ClockIcon className="h-4 w-4 text-muted-foreground" />
                         </CardTitle>
                       </CardHeader>
                       <CardContent>

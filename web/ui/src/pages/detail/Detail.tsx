@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ExternalLink, ChevronLeft, ChevronRight, Code, ClockIcon, Trash2Icon, DownloadIcon, ImagesIcon, ZoomInIcon, CopyIcon } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight, ClockIcon, Trash2Icon, DownloadIcon, ImagesIcon, ZoomInIcon, CopyIcon, NetworkIcon, TerminalIcon, ServerIcon, CookieIcon, CodeIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
 import { WideSkeleton } from '@/components/loading';
 import { Form, Link, useNavigate, useParams } from 'react-router-dom';
@@ -15,10 +15,10 @@ import { copyToClipboard, getIconUrl, getStatusColor } from '@/lib/common';
 import * as api from "@/lib/api/api";
 import * as apitypes from "@/lib/api/types";
 import { getData } from './data';
+import { LockClosedIcon } from '@radix-ui/react-icons';
 
 
 const ScreenshotDetailPage = () => {
-  const [isHtmlModalOpen, setIsHtmlModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState('network');
@@ -188,7 +188,7 @@ const ScreenshotDetailPage = () => {
                       : api.endpoints.screenshot.path + "/" + detail.file_name
                   }
                   alt={detail.title}
-                  className="w-full h-auto object-cover transition-all duration-300 filter group-hover:brightness-75 rounded-lg"
+                  className="w-full h-auto object-cover transition-all duration-300 filter group-hover:brightness-75 rounded-t-3xl"
                 />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <ZoomInIcon className="w-12 h-12 text-white" />
@@ -243,36 +243,11 @@ const ScreenshotDetailPage = () => {
   const techCard = (detail: apitypes.detail) => {
     return (
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>Technologies</CardTitle>
-          <Dialog open={isHtmlModalOpen} onOpenChange={setIsHtmlModalOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm" disabled={detail.html.length === 0}>
-                <Code className="mr-2 h-4 w-4" />
-                View HTML
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[90vw] w-full max-h-[90vh]">
-              <DialogHeader>
-                <DialogTitle>
-                  HTML Content
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="ml-4"
-                    onClick={() => copyToClipboard(detail.html, 'HTML Source')}
-                  >
-                    <CopyIcon className="mr-2 h-4 w-4" />
-                    Copy
-                  </Button>
-                </DialogTitle>
-              </DialogHeader>
-              <ScrollArea className="h-[400px] w-full rounded-md border p-4">
-                <pre className="text-sm">{detail.html}</pre>
-              </ScrollArea>
-
-            </DialogContent>
-          </Dialog>
+        <CardHeader>
+          <CardTitle className="flex flex-row items-center justify-between">
+            <CardTitle className="text-xl font-medium">Technologies</CardTitle>
+            <CodeIcon className="h-4 w-4 text-muted-foreground" />
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {detail.technologies.length > 0 ? (
@@ -299,7 +274,10 @@ const ScreenshotDetailPage = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>TLS Information</CardTitle>
+          <CardTitle className="flex flex-row items-center justify-between">
+            <CardTitle className="text-xl font-medium">TLS Information</CardTitle>
+            <LockClosedIcon className="h-4 w-4 text-muted-foreground" />
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -359,7 +337,7 @@ const ScreenshotDetailPage = () => {
 
   const summaryCard = (detail: apitypes.detail) => {
     return (
-      <Card className="bg-gradient-to-r from-green-600 to-blue-500 text-white">
+      <Card className="bg-gradient-to-r text-white bg-primary">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle >Summary</CardTitle>
           <Badge className={`${getStatusColor(detail.response_code)} px-3 py-1`}>
@@ -437,9 +415,10 @@ const ScreenshotDetailPage = () => {
       <TabsContent value="network">
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Network Log</CardTitle>
-            </div>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl font-medium">Network Log</CardTitle>
+              <NetworkIcon className="h-4 w-4 text-muted-foreground" />
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {log.length === 0 ? (
@@ -490,7 +469,7 @@ const ScreenshotDetailPage = () => {
                         )}
                       </TableCell>
                       <TableCell
-                        className="break-all cursor-pointer"
+                        className="break-all cursor-pointer font-mono"
                         onClick={() => copyToClipboard(log.url, 'URL')}
                       >
                         {log.url}
@@ -511,9 +490,10 @@ const ScreenshotDetailPage = () => {
       <TabsContent value="console">
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Console Log</CardTitle>
-            </div>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl font-medium">Console Log</CardTitle>
+              <TerminalIcon className="h-4 w-4 text-muted-foreground" />
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {log.length === 0 ? (
@@ -554,11 +534,12 @@ const ScreenshotDetailPage = () => {
   const headersTab = (headers: apitypes.header[]) => {
     return (<TabsContent value="headers">
       <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle>Response Headers</CardTitle>
-          </div>
-        </CardHeader>
+      <CardHeader>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl font-medium">Response Headers</CardTitle>
+              <ServerIcon className="h-4 w-4 text-muted-foreground" />
+            </CardTitle>
+          </CardHeader>
         <CardContent>
           {headers.length === 0 ? (
             <div className="text-center text-muted-foreground">No data</div>
@@ -599,10 +580,11 @@ const ScreenshotDetailPage = () => {
     return (
       <TabsContent value="cookies">
         <Card>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Cookies</CardTitle>
-            </div>
+        <CardHeader>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl font-medium">Cookies</CardTitle>
+              <CookieIcon className="h-4 w-4 text-muted-foreground" />
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {cookies.length === 0 ? (
@@ -686,6 +668,37 @@ const ScreenshotDetailPage = () => {
     );
   };
 
+  const htmlTab = () => {
+    return (
+      <TabsContent value="html">
+        <Card>
+        <CardHeader>
+            <CardTitle className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xl font-medium">
+                HTML Content
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-4"
+                    onClick={() => copyToClipboard(detail.html, 'HTML Source')}
+                  >
+                    <CopyIcon className="mr-2 h-4 w-4" />
+                    Copy
+                  </Button>
+              </CardTitle>
+              <CodeIcon className="h-4 w-4 text-muted-foreground" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[400px] rounded-md border p-4">
+              <pre className="text-sm w-0">{detail.html}</pre>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {getNavigation()}
@@ -707,11 +720,13 @@ const ScreenshotDetailPage = () => {
               <TabsTrigger value="console">Console Log</TabsTrigger>
               <TabsTrigger value="headers">Response Headers</TabsTrigger>
               <TabsTrigger value="cookies">Cookies</TabsTrigger>
+              <TabsTrigger value="html">HTML Content</TabsTrigger>
             </TabsList>
             {networkLogTab(detail.network)}
             {consoleLogTab(detail.console)}
             {headersTab(detail.headers)}
             {cookiesTab(detail.cookies)}
+            {htmlTab()}
           </Tabs>
         </div>
       </div>

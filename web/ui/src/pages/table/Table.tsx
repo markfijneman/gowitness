@@ -81,7 +81,7 @@ export default function TablePage() {
           </Select>
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-xl bg-card">
         <Table>
           <TableHeader>
             <TableRow>

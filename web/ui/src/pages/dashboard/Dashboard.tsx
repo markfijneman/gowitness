@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { WideSkeleton } from "@/components/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DatabaseIcon, FileTextIcon, HardDriveIcon, NetworkIcon, TerminalIcon } from "lucide-react";
+import { DatabaseIcon, FileTextIcon, ServerIcon, NetworkIcon, TerminalIcon } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import * as apitypes from "@/lib/api/types";
@@ -19,7 +19,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const StatCard = ({ title, value, icon: Icon }: { title: string; value: number | string; icon: React.ElementType; }) => (
-  <Card className="overflow-hidden transition-all hover:shadow-lg">
+  <Card className="overflow-hidden transition-all">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
       <Icon className="h-4 w-4 text-muted-foreground" />
@@ -57,7 +57,7 @@ export default function DashboardPage() {
         <StatCard
           title="Headers"
           value={stats ? stats.headers : 0}
-          icon={HardDriveIcon}
+          icon={ServerIcon}
         />
         <StatCard
           title="Network Logs"

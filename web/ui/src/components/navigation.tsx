@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ImageIcon, ImagePlusIcon, LayoutDashboardIcon, ScanIcon, SearchIcon, TableIcon } from "lucide-react";
+import { ImageIcon, ScanTextIcon, LayoutDashboardIcon, ScanIcon, SearchIcon, TableIcon } from "lucide-react";
 import { Form, NavLink, useSubmit } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -11,7 +11,7 @@ const navs = [
   { name: `Dashboard`, icon: <LayoutDashboardIcon className="mr-2 h-4 w-4" />, to: `/` },
   { name: `Gallery`, icon: <ImageIcon className="mr-2 h-4 w-4" />, to: `/gallery` },
   { name: `Overview`, icon: <TableIcon className="mr-2 h-4 w-4" />, to: `/overview` },
-  { name: `New Probe`, icon: <ImagePlusIcon className="mr-2 h-4 w-4" />, to: `/submit` }
+  { name: `Scans`, icon: <ScanTextIcon className="mr-2 h-4 w-4" />, to: `/submit` }
 ];
 
 const searchOperators = [
@@ -59,7 +59,7 @@ const Navigation = () => {
       <nav className="container flex h-14 items-center">
         <NavLink to="/" className="flex items-center space-x-2 p-2">
           <ScanIcon className="h-6 w-6" />
-          <span className="font-bold">gowitness, v3</span>
+          <span className="font-bold">gowitness</span>
         </NavLink>
         {navs.map(nav => {
           return <NavLink

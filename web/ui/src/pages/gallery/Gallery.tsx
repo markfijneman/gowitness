@@ -151,7 +151,7 @@ const GalleryPage = () => {
 
     return (
       <Link to={`/screenshot/${screenshot.id}`} key={screenshot.id}>
-        <Card className="group overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
+        <Card className="group overflow-hidden transition-all shadow hover:shadow-lg flex flex-col h-full rounded-2xl">
           <CardContent className="p-0 relative flex-grow">
             {screenshot.failed ? (
               <div className="w-full h-48 bg-gray-800 flex items-center justify-center">
@@ -164,11 +164,11 @@ const GalleryPage = () => {
                   : api.endpoints.screenshot.path + "/" + screenshot.file_name}
                 alt={screenshot.url}
                 loading="lazy"
-                className="w-full h-48 object-cover transition-all duration-300 filter group-hover:scale-105"
+                className="w-full object-cover transition-all duration-300 filter group-hover:scale-105"
               />
             )}
             <div className="absolute top-2 right-2">
-              <Badge variant="default" className={`${getStatusColor(screenshot.response_code)}`}>
+              <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} opacity-90`}>
                 {screenshot.response_code}
               </Badge>
             </div>
