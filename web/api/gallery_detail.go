@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/sensepost/gowitness/pkg/log"
-	"github.com/sensepost/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/pkg/models"
 	"gorm.io/gorm/clause"
 )
 

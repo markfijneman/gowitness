@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/glebarez/sqlite"
-	"github.com/sensepost/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

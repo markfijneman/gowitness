@@ -14,9 +14,9 @@ RUN cd web/ui && \
 RUN go install github.com/swaggo/swag/cmd/swag@latest && \
 	swag i --exclude ./web/ui --output web/docs && \
 	go build -trimpath -ldflags="-s -w \
-	-X=github.com/sensepost/gowitness/internal/version.GitHash=$(git rev-parse --short HEAD) \
-	-X=github.com/sensepost/gowitness/internal/version.GoBuildEnv=$(go version | cut -d' ' -f 3,4 | sed 's/ /_/g') \
-	-X=github.com/sensepost/gowitness/internal/version.GoBuildTime=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+	-X=github.com/markfijneman/gowitness/internal/version.GitHash=$(git rev-parse --short HEAD) \
+	-X=github.com/markfijneman/gowitness/internal/version.GoBuildEnv=$(go version | cut -d' ' -f 3,4 | sed 's/ /_/g') \
+	-X=github.com/markfijneman/gowitness/internal/version.GoBuildTime=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
 	-o gowitness
 
 FROM ghcr.io/go-rod/rod

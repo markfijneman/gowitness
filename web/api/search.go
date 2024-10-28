@@ -7,8 +7,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/sensepost/gowitness/pkg/log"
-	"github.com/sensepost/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/pkg/models"
 )
 
 type searchRequest struct {

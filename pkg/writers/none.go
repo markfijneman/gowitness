@@ -1,7 +1,7 @@
 package writers
 
 import (
-	"github.com/sensepost/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/models"
 )
 
 // NoneWriter is a None writer

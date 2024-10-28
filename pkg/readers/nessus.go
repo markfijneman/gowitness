@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sensepost/gowitness/internal/islazy"
+	"github.com/markfijneman/gowitness/internal/islazy"
 )
 
 // NessusReader is a Nessus file reader

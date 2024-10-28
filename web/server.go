@@ -4,14 +4,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sensepost/gowitness/web/docs"
+	"github.com/markfijneman/gowitness/web/docs"
 	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/sensepost/gowitness/pkg/log"
-	"github.com/sensepost/gowitness/web/api"
+	"github.com/markfijneman/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/web/api"
 )
 
 // Server is a web server

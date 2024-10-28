@@ -10,12 +10,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/sensepost/gowitness/internal/ascii"
-	"github.com/sensepost/gowitness/internal/islazy"
-	"github.com/sensepost/gowitness/pkg/database"
-	"github.com/sensepost/gowitness/pkg/log"
-	"github.com/sensepost/gowitness/pkg/models"
-	"github.com/sensepost/gowitness/pkg/writers"
+	"github.com/markfijneman/gowitness/internal/ascii"
+	"github.com/markfijneman/gowitness/internal/islazy"
+	"github.com/markfijneman/gowitness/pkg/database"
+	"github.com/markfijneman/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/writers"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm/clause"
 )

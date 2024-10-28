@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sensepost/gowitness/internal/islazy"
-	"github.com/sensepost/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/internal/islazy"
+	"github.com/markfijneman/gowitness/pkg/log"
 )
 
 type CidrReader struct {

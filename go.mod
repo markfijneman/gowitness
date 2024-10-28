@@ -1,4 +1,4 @@
-module github.com/sensepost/gowitness
+module github.com/markfijneman/gowitness
 
 go 1.23.0
 

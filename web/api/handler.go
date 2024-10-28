@@ -1,8 +1,8 @@
 package api
 
 import (
+	"github.com/markfijneman/gowitness/pkg/database"
 	wappalyzer "github.com/projectdiscovery/wappalyzergo"
-	"github.com/sensepost/gowitness/pkg/database"
 	"gorm.io/gorm"
 )
 

@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sensepost/gowitness/internal/ascii"
-	"github.com/sensepost/gowitness/internal/version"
+	"github.com/markfijneman/gowitness/internal/ascii"
+	"github.com/markfijneman/gowitness/internal/version"
 	"github.com/spf13/cobra"
 )
 

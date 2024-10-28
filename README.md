@@ -8,8 +8,8 @@
 <h4 align="center">A golang, web screenshot utility using Chrome Headless.</h4>
 <p align="center">
   <a href="https://twitter.com/leonjza"><img src="https://img.shields.io/badge/twitter-%40leonjza-blue.svg" alt="@leonjza" height="18"></a>
-  <a href="https://goreportcard.com/report/github.com/sensepost/gowitness"><img src="https://goreportcard.com/badge/github.com/sensepost/gowitness" alt="Go Report Card" height="18"></a>
-  <a href="https://github.com/sensepost/gowitness/actions/workflows/docker.yml"><img alt="Docker build & Push" src="https://github.com/sensepost/gowitness/actions/workflows/docker.yml/badge.svg"></a>
+  <a href="https://goreportcard.com/report/github.com/markfijneman/gowitness"><img src="https://goreportcard.com/badge/github.com/markfijneman/gowitness" alt="Go Report Card" height="18"></a>
+  <a href="https://github.com/markfijneman/gowitness/actions/workflows/docker.yml"><img alt="Docker build & Push" src="https://github.com/markfijneman/gowitness/actions/workflows/docker.yml/badge.svg"></a>
 </p>
 <br>
 
@@ -33,7 +33,7 @@ The main goal of `gowitness` is to take website screenshots (**and do that well!
 There are a few ways to get gowitness, the simplest (assuming your `$GOBIN` path is in your shell `$PATH`) will be to use `go install`:
 
 ```text
-go install github.com/sensepost/gowitness@latest
+go install github.com/markfijneman/gowitness@latest
 ```
 
 Otherwise, grab a platform specific release binary or compile from source. Then, scan your first target writing the results to a SQLite database and the screenshot to `./screenshots` with:
@@ -46,7 +46,7 @@ There are many, *many* flags and scan types in `gowitness`. Just add `-h` anywhe
 
 ## documentation
 
-For advanced installation information and other documentation, please refer to the wiki [here](https://github.com/sensepost/gowitness/wiki).
+For advanced installation information and other documentation, please refer to the wiki [here](https://github.com/markfijneman/gowitness/wiki).
 
 ## screenshots
 

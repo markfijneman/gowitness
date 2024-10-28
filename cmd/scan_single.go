@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 
-	"github.com/sensepost/gowitness/internal/ascii"
+	"github.com/markfijneman/gowitness/internal/ascii"
 	"github.com/spf13/cobra"
 )
 

@@ -3,7 +3,7 @@ package runner
 import (
 	"fmt"
 
-	"github.com/sensepost/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/models"
 )
 
 // ChromeNotFoundError signals that chrome is not available

@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/glebarez/sqlite"
-	"github.com/sensepost/gowitness/internal/ascii"
-	"github.com/sensepost/gowitness/pkg/log"
-	"github.com/sensepost/gowitness/pkg/models"
-	"github.com/sensepost/gowitness/pkg/models/oldv2"
-	"github.com/sensepost/gowitness/pkg/writers"
+	"github.com/markfijneman/gowitness/internal/ascii"
+	"github.com/markfijneman/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/pkg/models"
+	"github.com/markfijneman/gowitness/pkg/models/oldv2"
+	"github.com/markfijneman/gowitness/pkg/writers"
 	"github.com/spf13/cobra"
 	"gorm.io/gorm"
 )

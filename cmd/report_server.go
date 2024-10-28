@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/sensepost/gowitness/internal/ascii"
-	"github.com/sensepost/gowitness/web"
+	"github.com/markfijneman/gowitness/internal/ascii"
+	"github.com/markfijneman/gowitness/web"
 	"github.com/spf13/cobra"
 )
 
