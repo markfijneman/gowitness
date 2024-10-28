@@ -82,6 +82,7 @@ func getChromedpAllocator(opts runner.Options) (*browserInstance, error) {
 			chromedp.Flag("disable-renderer-backgrounding", true),
 			chromedp.Flag("deny-permission-prompts", true),
 			chromedp.Flag("explicitly-allowed-ports", restrictedPorts()),
+			chromedp.Flag("force-device-scale-factor", "1"),
 			chromedp.WindowSize(opts.Chrome.WindowX, opts.Chrome.WindowY),
 			chromedp.UserDataDir(userData),
 		)
