@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { PlusCircle, Trash2, Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon } from 'lucide-react';
+import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import * as apitypes from "@/lib/api/types";
+import { TextArea } from '@/components/ui/textarea';
 
 export default function JobSubmissionPage() {
   const [urls, setUrls] = useState<string[]>(['']);
@@ -28,20 +29,14 @@ export default function JobSubmissionPage() {
       : setIsModalOpen(false);
   }, [probeResult]);
 
-  const handleUrlChange = (index: number, value: string) => {
-    const newUrls = [...urls];
-    newUrls[index] = value;
-    setUrls(newUrls);
+  const handleUrlChange = (value: string) => {
+    const valueUrls = value.split("\n");
+    setUrls(valueUrls);
   };
 
-  const addUrl = () => {
-    setUrls([...urls, '']);
-  };
-
-  const removeUrl = (index: number) => {
-    const newUrls = urls.filter((_, i) => i !== index);
-    setUrls(newUrls);
-  };
+  const filteredUrls = () => {
+    return urls.filter((url) => url.trim() !== "");
+  }
 
   const ProbeOptions = () => (
     <Accordion type="single" collapsible>
@@ -161,27 +156,16 @@ export default function JobSubmissionPage() {
               <Form method="post" className="space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">URLs</h3>
-                  {urls.map((url, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <Input
-                        type="text"
-                        name={`url-${index}`}
+                  <span className="text-sm text-muted-foreground">Enter 1 URL per line.</span>
+                    <div className="flex items-center space-x-2">
+                      <TextArea
+                        name="urls"
                         placeholder="sensepost.com"
-                        value={url}
-                        onChange={(e) => handleUrlChange(index, e.target.value)}
+                        value={urls.join("\n")}
+                        onChange={(e) => handleUrlChange(e.target.value)}
                         className="flex-grow"
                       />
-                      {index === urls.length - 1 ? (
-                        <Button type="button" variant="outline" size="icon" onClick={addUrl}>
-                          <PlusCircle className="h-4 w-4" />
-                        </Button>
-                      ) : (
-                        <Button type="button" variant="outline" size="icon" onClick={() => removeUrl(index)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
                     </div>
-                  ))}
                 </div>
                 <input type="hidden" name="action" value="job" />
 
@@ -201,9 +185,9 @@ export default function JobSubmissionPage() {
                 <input type="hidden" name="action" value="job" />
 
                 <div className="flex justify-end">
-                  <Button type="submit" disabled={navigation.state === "submitting"}>
+                  <Button type="submit" disabled={navigation.state === "submitting" || filteredUrls().length < 1}>
                     <Send className="mr-2 h-4 w-4" />
-                    {navigation.state === "submitting" ? "Submitting..." : `Submit ${urls.length} target${urls.length > 1 ? "s" : ""}`}
+                    {navigation.state === "submitting" ? "Submitting..." : `Submit ${filteredUrls().length} target${filteredUrls().length != 1 ? "s" : ""}`}
                   </Button>
                 </div>
               </Form>
@@ -218,7 +202,7 @@ export default function JobSubmissionPage() {
                     placeholder="https://sensepost.com"
                     value={immediateUrl}
                     onChange={(e) => setImmediateUrl(e.target.value)}
-                    className="flex-grow"
+                    className="flex-grow font-mono"
                   />
                 </div>
 
@@ -238,7 +222,7 @@ export default function JobSubmissionPage() {
                 <input type="hidden" name="action" value="immediate" />
 
                 <div className="flex justify-end">
-                  <Button type="submit" disabled={navigation.state === "submitting"}>
+                  <Button type="submit" disabled={navigation.state === "submitting" || !immediateUrl}>
                     <Send className="mr-2 h-4 w-4" />
                     {navigation.state === "submitting" ? "Running scan..." : "Scan URL"}
                   </Button>

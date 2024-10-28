@@ -5,10 +5,10 @@ import { redirect } from "react-router-dom";
 const submitJobAction = async ({ formData }: { formData: FormData; }) => {
 
   // grab submitted urls
-  const urls = Array.from(formData.entries())
-    .filter(([key]) => key.startsWith('url-'))
-    .map(([, value]) => value as string)
-    .filter(url => url.trim() !== '');
+  const urls = (formData.get('urls') as string)
+    .split('\n')
+    .map(url => url.trim())
+    .filter(url => url !== '');
 
   if (urls.length === 0) {
     return { error: "Please enter at least one URL" };
