@@ -16,10 +16,11 @@ import { TextArea } from '@/components/ui/textarea';
 
 export default function JobSubmissionPage() {
   const [urls, setUrls] = useState<string[]>(['']);
+  const [isOptionsOpen, setIsOptionsOpen] = useState('');
   const [advancedOptions, setAdvancedOptions] = useState(false);
   const [immediateUrl, setImmediateUrl] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  
   const navigation = useNavigation();
   const probeResult = useActionData() as apitypes.detail | null;
 
@@ -39,7 +40,11 @@ export default function JobSubmissionPage() {
   }
 
   const ProbeOptions = () => (
-    <Accordion type="single" collapsible>
+    <Accordion
+      type="single"
+      collapsible
+      value={isOptionsOpen}
+      onValueChange={setIsOptionsOpen}>
       <AccordionItem value="options">
         <AccordionTrigger>
           <div className="flex items-center">
