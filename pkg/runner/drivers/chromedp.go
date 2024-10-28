@@ -414,6 +414,8 @@ func (run *Chromedp) Witness(target string, thisRunner *runner.Runner) (*models.
 	// grab a screenshot
 	var img []byte
 	err = chromedp.Run(navigationCtx,
+		chromedp.EmulateViewport(int64(run.options.Chrome.WindowX), int64(run.options.Chrome.WindowY)), // Screenshot resolution
+
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			var err error
 			params := page.CaptureScreenshot().
