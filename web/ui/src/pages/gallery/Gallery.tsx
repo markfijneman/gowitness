@@ -167,11 +167,6 @@ const GalleryPage = () => {
                 className="w-full object-cover transition-all duration-300 filter group-hover:scale-105"
               />
             )}
-            <div className="absolute top-2 right-2">
-              <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} opacity-90`}>
-                {screenshot.response_code}
-              </Badge>
-            </div>
             <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <ExternalLinkIcon className="text-white drop-shadow-lg" />
             </div>
@@ -196,19 +191,23 @@ const GalleryPage = () => {
               </div>
             </div>
             <div className="w-full flex items-center justify-between mt-2">
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                      <ClockIcon className="w-3 h-3" />
-                      <span className="text-nowrap">{timeAgo}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
-                    <p>{rawDate}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="grid grid-flow-col gap-2">
+                <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} opacity-90 shadow-none`}>
+                  {screenshot.response_code}
+                </Badge>
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                        <ClockIcon className="w-3 h-3" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">
+                      <p>{timeAgo} - {rawDate}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <div className="flex flex-wrap justify-end gap-1">
                 {screenshot.technologies?.map(tech => {
                   const iconUrl = getIconUrl(tech, wappalyzer);
