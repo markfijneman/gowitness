@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/markfijneman/gowitness/pkg/log"
+	"github.com/markfijneman/gowitness/pkg/readers"
 	"github.com/markfijneman/gowitness/pkg/runner"
 	driver "github.com/markfijneman/gowitness/pkg/runner/drivers"
 	"github.com/markfijneman/gowitness/pkg/writers"
@@ -94,8 +95,16 @@ func (h *ApiHandler) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// process URLs in a similar way to the scan file command
+	// adds missing protocols (http + https) if required
+	var urls []string
+	for _, url := range request.URLs {
+		result := readers.UrlsFor(url, []int{80, 443})
+		urls = append(urls, result...)
+	}
+
 	// have everything we need! start ther runner goroutine
-	go dispatchRunner(runner, request.URLs)
+	go dispatchRunner(runner, urls)
 
 	response := `Probing started`
 	jsonData, err := json.Marshal(response)

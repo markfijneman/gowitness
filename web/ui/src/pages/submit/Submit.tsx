@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { PlusCircle, Trash2, Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon } from 'lucide-react';
+import { PlusCircle, Trash2, Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -49,7 +49,7 @@ export default function JobSubmissionPage() {
         <AccordionTrigger>
           <div className="flex items-center">
             <Settings className="mr-2 h-4 w-4" />
-            Probe Options
+            Options
           </div>
         </AccordionTrigger>
         <AccordionContent>
@@ -145,27 +145,28 @@ export default function JobSubmissionPage() {
     <div className="container mx-auto py-6">
       <Card>
         <CardHeader>
-          <CardTitle>Launch a New Probe</CardTitle>
-          <CardDescription>Submit a job or run an immediate probe</CardDescription>
+          <CardTitle className="flex flex-row items-center justify-between">
+            <CardTitle className="text-xl font-medium">New scan</CardTitle>
+            <ScanTextIcon className="h-4 w-4 text-muted-foreground" />
+          </CardTitle>
         </CardHeader>
         <CardContent>
 
           <Tabs defaultValue="job">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="job">Job Submission Probe</TabsTrigger>
-              <TabsTrigger value="immediate">Immediate Probe</TabsTrigger>
+              <TabsTrigger value="job">Submit job</TabsTrigger>
+              <TabsTrigger value="immediate">Test URL</TabsTrigger>
             </TabsList>
             <TabsContent value="job">
               <Form method="post" className="space-y-6">
-                <input type="hidden" name="action" value="job" />
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">URLs</h3>
                   {urls.map((url, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <Input
-                        type="url"
+                        type="text"
                         name={`url-${index}`}
-                        placeholder="https://sensepost.com"
+                        placeholder="sensepost.com"
                         value={url}
                         onChange={(e) => handleUrlChange(index, e.target.value)}
                         className="flex-grow"
@@ -182,6 +183,7 @@ export default function JobSubmissionPage() {
                     </div>
                   ))}
                 </div>
+                <input type="hidden" name="action" value="job" />
 
                 <ProbeOptions />
 
@@ -201,7 +203,7 @@ export default function JobSubmissionPage() {
                 <div className="flex justify-end">
                   <Button type="submit" disabled={navigation.state === "submitting"}>
                     <Send className="mr-2 h-4 w-4" />
-                    {navigation.state === "submitting" ? "Submitting..." : `Submit ${urls.length} Target${urls.length > 1 ? "s" : ""}`}
+                    {navigation.state === "submitting" ? "Submitting..." : `Submit ${urls.length} target${urls.length > 1 ? "s" : ""}`}
                   </Button>
                 </div>
               </Form>
@@ -238,7 +240,7 @@ export default function JobSubmissionPage() {
                 <div className="flex justify-end">
                   <Button type="submit" disabled={navigation.state === "submitting"}>
                     <Send className="mr-2 h-4 w-4" />
-                    {navigation.state === "submitting" ? "Running Probe..." : "Run Immediate Probe"}
+                    {navigation.state === "submitting" ? "Running scan..." : "Scan URL"}
                   </Button>
                 </div>
               </Form>
@@ -250,8 +252,8 @@ export default function JobSubmissionPage() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle>Probe Result</DialogTitle>
-            <DialogDescription>Details of the immediate probe</DialogDescription>
+            <DialogTitle>Result</DialogTitle>
+            <DialogDescription>Details of the single-URL scan</DialogDescription>
           </DialogHeader>
           {probeResult && (
             <div className="flex-1 overflow-hidden">

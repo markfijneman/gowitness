@@ -64,7 +64,7 @@ func (fr *FileReader) Read(ch chan<- string) error {
 			continue
 		}
 
-		for _, url := range fr.urlsFor(candidate, ports) {
+		for _, url := range UrlsFor(candidate, ports) {
 			ch <- url
 		}
 	}
@@ -72,12 +72,12 @@ func (fr *FileReader) Read(ch chan<- string) error {
 	return scanner.Err()
 }
 
-// urlsFor returns URLs for a scanning candidate.
+// UrlsFor returns URLs for a scanning candidate.
 //
 // For candidates with no protocol, (and none of http/https is ignored), the
 // method will return two urls.
 // If any ports configuration exists, those will also be added as candidates.
-func (fr *FileReader) urlsFor(candidate string, ports []int) []string {
+func UrlsFor(candidate string, ports []int) []string {
 	var urls []string
 
 	// trim any spaces
@@ -124,19 +124,6 @@ func (fr *FileReader) urlsFor(candidate string, ports []int) []string {
 		return urls
 	}
 
-	// determine schemes to apply
-	var schemes []string
-	if hasScheme {
-		schemes = append(schemes, parsedURL.Scheme)
-	} else {
-		if !fr.Options.NoHTTP {
-			schemes = append(schemes, "http")
-		}
-		if !fr.Options.NoHTTPS {
-			schemes = append(schemes, "https")
-		}
-	}
-
 	// determine ports to use
 	var targetPorts []int
 	if hasPort {
@@ -150,26 +137,42 @@ func (fr *FileReader) urlsFor(candidate string, ports []int) []string {
 	}
 
 	// generate the urls
-	for _, scheme := range schemes {
-		for _, port := range targetPorts {
-			host := hostname
+	for _, port := range targetPorts {
+		host := hostname
 
-			if port != 0 {
+		if port != 0 {
+			// hide default ports from url
+			if port == 80 || port == 443 {
+				if isIPv6(hostname) {
+					host = fmt.Sprintf("[%s]", hostname)
+				} else {
+					host = fmt.Sprintf("%s", hostname)
+				}
+			} else {
 				if isIPv6(hostname) {
 					host = fmt.Sprintf("[%s]:%d", hostname, port)
 				} else {
 					host = fmt.Sprintf("%s:%d", hostname, port)
 				}
 			}
-
-			fullURL := url.URL{
-				Scheme: scheme,
-				Host:   host,
-				Path:   parsedURL.Path,
-			}
-
-			urls = append(urls, fullURL.String())
 		}
+
+		// determine scheme based on port
+		scheme := "http"
+		if port == 443 || port == 8443 {
+			scheme = "https"
+		}
+
+		fullURL := url.URL{
+			Scheme: scheme,
+			Host:   host,
+			Path:   parsedURL.Path,
+		}
+
+		// get fullURL.String(), so with scheme port path etc.
+		// BUT: exclude the port if it is 80 or 443!
+
+		urls = append(urls, fullURL.String())
 	}
 
 	return urls

@@ -99,7 +99,7 @@ func TestUrlsFor(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := fr.urlsFor(tt.candidate, tt.ports)
+			got := UrlsFor(tt.candidate, tt.ports)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("urlsFor() =>\n\nhave: %v\nwant %v", got, tt.want)
 			}

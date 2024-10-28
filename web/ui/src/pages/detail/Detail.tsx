@@ -365,7 +365,7 @@ const ScreenshotDetailPage = () => {
               </Tooltip>
             </TooltipProvider>{" "}
             responding with an HTTP <span className="font-mono">{detail.response_code}</span> and{" "}
-            <span className="font-mono">{(detail.content_length / 1024).toFixed(2)}</span> KB of content. Probing (first
+            <span className="font-mono">{(detail.content_length / 1024).toFixed(2)}</span> KB of content. Scanning (first
             to last request) took roughly {duration}.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -396,7 +396,7 @@ const ScreenshotDetailPage = () => {
                 <TooltipTrigger asChild>
                   <div className="flex items-center space-x-1 text-sm text-white">
                     <ClockIcon className="w-4 h-4" />
-                    <span className="text-nowrap">Probed {timeAgo}</span>
+                    <span className="text-nowrap">Scanned {timeAgo}</span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="text-xs">
