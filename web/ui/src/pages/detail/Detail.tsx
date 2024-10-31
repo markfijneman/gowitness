@@ -201,8 +201,14 @@ const ScreenshotDetailPage = () => {
                   src={api.endpoints.screenshot.path + "/" + detail.file_name}
                   alt={detail.title}
                   className="bg-black absolute w-full h-full object-contain rounded-3xl"
+                  onClick={() => setIsModalOpen(false)}
                 />
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 text-white rounded-t-3xl">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute h-5 w-5 top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-all"
+                >
+                </button>
+                <div className="absolute bottom-4 left-4 bg-black/40 p-4 text-white rounded-3xl">
                   <a
                     href={detail.url}
                     target="_blank"
@@ -217,11 +223,6 @@ const ScreenshotDetailPage = () => {
                     Captured on {format(new Date(detail.probed_at), "PPpp")}
                   </div>
                 </div>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute h-5 w-5 top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-all"
-                >
-                </button>
               </div>
             </DialogContent>
           </Dialog>
