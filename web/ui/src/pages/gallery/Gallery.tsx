@@ -151,7 +151,7 @@ const GalleryPage = () => {
 
     return (
       <Link to={`/screenshot/${screenshot.id}`} key={screenshot.id}>
-        <Card className="group overflow-hidden transition-all shadow hover:shadow-lg flex flex-col h-full rounded-2xl">
+        <Card className="group overflow-hidden transition-all shadow hover:shadow-lg flex flex-col h-full rounded-lg">
           <CardContent className="p-0 relative flex-grow">
             {screenshot.failed ? (
               <div className="w-full h-48 bg-gray-800 flex items-center justify-center">

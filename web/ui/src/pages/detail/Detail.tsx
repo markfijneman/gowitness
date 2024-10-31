@@ -195,14 +195,14 @@ const ScreenshotDetailPage = () => {
                 </div>
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0">
+            <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 text-white">
               <div className="relative w-full h-full">
                 <img
                   src={api.endpoints.screenshot.path + "/" + detail.file_name}
                   alt={detail.title}
-                  className="w-full h-full object-contain"
+                  className="bg-black absolute w-full h-full object-contain rounded-3xl"
                 />
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/100 to-transparent p-4 text-white">
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/60 to-transparent p-4 text-white rounded-t-3xl">
                   <a
                     href={detail.url}
                     target="_blank"
@@ -219,7 +219,7 @@ const ScreenshotDetailPage = () => {
                 </div>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="absolute top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-all"
+                  className="absolute h-5 w-5 top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-all"
                 >
                 </button>
               </div>
@@ -369,23 +369,23 @@ const ScreenshotDetailPage = () => {
             to last request) took roughly {duration}.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+            <div className="bg-white bg-opacity-20 rounded-3xl p-4 text-center">
               <p className="text-3xl font-bold">{detail.network.length}</p>
               <p className="text-sm">Requests</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+            <div className="bg-white bg-opacity-20 rounded-3xl p-4 text-center">
               <p className="text-3xl font-bold">{detail.console.length}</p>
               <p className="text-sm">Console Logs</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+            <div className="bg-white bg-opacity-20 rounded-3xl p-4 text-center">
               <p className="text-3xl font-bold">{Object.keys(detail.headers).length}</p>
               <p className="text-sm">Headers</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+            <div className="bg-white bg-opacity-20 rounded-3xl p-4 text-center">
               <p className="text-3xl font-bold">{detail.technologies.length}</p>
               <p className="text-sm">Technologies</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+            <div className="bg-white bg-opacity-20 rounded-3xl p-4 text-center">
               <p className="text-3xl font-bold">{detail.cookies.length}</p>
               <p className="text-sm">Cookies</p>
             </div>
