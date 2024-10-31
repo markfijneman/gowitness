@@ -5,8 +5,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import { WideSkeleton } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import {
-  AlertOctagonIcon, BanIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, ExternalLinkIcon,
-  FilterIcon, GroupIcon, ShieldCheckIcon, XIcon
+  AlertOctagonIcon, BanIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, ExternalLink,
+  FilterIcon, GroupIcon, ShieldCheckIcon, XIcon,
+  ZoomInIcon
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,6 +21,7 @@ import { getData, getWappalyzerData } from "./data";
 import { getIconUrl, getStatusColor } from "@/lib/common";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 
 const GalleryPage = () => {
@@ -33,12 +35,16 @@ const GalleryPage = () => {
   // pagination
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "24");
-  //filters
+  // filters
   const technologyFilter = searchParams.get("technologies") || "";
   const statusFilter = searchParams.get("status") || "";
   // toggles
   const perceptionGroup = searchParams.get("perception") === "true";
   const showFailed = searchParams.get("failed") !== "false"; // Default to true
+
+  // cards
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalId, setModalId] = useState<number | null>(null);
 
   useEffect(() => {
     getWappalyzerData(setWappalyzer, setTechnology);
@@ -144,98 +150,144 @@ const GalleryPage = () => {
     return pageButtons;
   };
 
+  const handleImageClick = (id: number) => {
+    setModalId(id);
+    setIsModalOpen(true);
+  }
+
   const renderGalleryCard = (screenshot: apitypes.galleryResult) => {
     const probedDate = new Date(screenshot.probed_at);
     const timeAgo = formatDistanceToNow(probedDate, { addSuffix: true });
     const rawDate = format(probedDate, "PPpp"); // Formats the date in a readable format
 
     return (
-      <Link to={`/screenshot/${screenshot.id}`} key={screenshot.id}>
         <Card className="group overflow-hidden transition-all shadow hover:shadow-lg flex flex-col h-full rounded-lg">
           <CardContent className="p-0 relative flex-grow">
-            {screenshot.failed ? (
-              <div className="w-full h-48 bg-gray-800 flex items-center justify-center">
-                <XIcon className="text-gray-600 w-12 h-12" />
-              </div>
-            ) : (
-              <img
-                src={screenshot.screenshot
-                  ? `data:image/png;base64,${screenshot.screenshot}`
-                  : api.endpoints.screenshot.path + "/" + screenshot.file_name}
-                alt={screenshot.url}
-                loading="lazy"
-                className="w-full object-cover transition-all duration-300 filter group-hover:scale-105"
-              />
-            )}
-            <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <ExternalLinkIcon className="text-white drop-shadow-lg" />
-            </div>
+            <Dialog open={isModalOpen && modalId == screenshot.id} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <div className="cursor-pointer" onClick={() => handleImageClick(screenshot.id)}>
+                  {screenshot.failed ? (
+                    <div className="w-full h-48 bg-gray-800 flex items-center justify-center">
+                      <XIcon className="text-gray-600 w-12 h-12" />
+                    </div>
+                  ) : (
+                    <>
+                      <img
+                        src={screenshot.screenshot
+                          ? `data:image/png;base64,${screenshot.screenshot}`
+                          : api.endpoints.screenshot.path + "/" + screenshot.file_name}
+                        alt={screenshot.url}
+                        loading="lazy"
+                        className="w-full object-cover aspect-video"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <ZoomInIcon className="w-12 h-12 text-white" />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 text-white">
+                <div className="relative w-full h-full">
+                  <img
+                    src={api.endpoints.screenshot.path + "/" + screenshot.file_name}
+                    alt={screenshot.title}
+                    className="bg-black absolute w-full h-full object-contain rounded-3xl cursor-pointer"
+                    onClick={() => setIsModalOpen(false)}
+                  />
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="absolute h-5 w-5 top-4 right-4 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-all"
+                  >
+                  </button>
+                  <div className="absolute bottom-4 left-4 bg-black/40 p-4 text-white rounded-3xl">
+                    <a
+                      href={screenshot.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-lg font-semibold hover:underline flex items-center mb-2"
+                    >
+                      {screenshot.url}
+                      <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                    <div className="flex items-center text-sm opacity-80">
+                      <ClockIcon className="mr-2 h-4 w-4" />
+                      Captured on {format(new Date(screenshot.probed_at), "PPpp")}
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </CardContent>
 
-          <CardFooter className="p-2 flex flex-col items-start">
-            <div className="w-full mb-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="w-full truncate text-sm font-medium">
-                      {screenshot.title || "Untitled"}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{screenshot.title || "Untitled"}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <div className="w-full truncate text-xs text-muted-foreground mt-1">
-                {screenshot.url}
-              </div>
-            </div>
-            <div className="w-full flex items-center justify-between mt-2">
-              <div className="grid grid-flow-col gap-2">
-                <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} opacity-90 shadow-none`}>
-                  {screenshot.response_code}
-                </Badge>
-                <TooltipProvider delayDuration={0}>
+          <CardFooter className="p-0 flex flex-col items-start">
+            <Link className="w-full h-full" to={screenshot.url} key={screenshot.id}>
+              <div className="w-full p-2 hover:bg-foreground/20 transition-background duration-300">
+                <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                        <ClockIcon className="w-3 h-3" />
+                      <div className="w-full truncate text-sm font-medium">
+                        {screenshot.title || "Untitled"}
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom" className="text-xs">
-                      <p>{timeAgo} - {rawDate}</p>
+                    <TooltipContent>
+                      <p>{screenshot.title || "Untitled"}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+                <div className="w-full truncate text-xs text-muted-foreground mt-1">
+                  {screenshot.url}
+                </div>
               </div>
-              <div className="flex flex-wrap justify-end gap-1">
-                {screenshot.technologies?.map(tech => {
-                  const iconUrl = getIconUrl(tech, wappalyzer);
-                  return iconUrl ? (
-                    <TooltipProvider key={tech} delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="w-6 h-6 flex items-center justify-center">
-                            <img
-                              src={iconUrl}
-                              alt={tech}
-                              loading="lazy"
-                              className="w-5 h-5 object-contain"
-                            />
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{tech}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : null;
-                })}
+            </Link>
+            <Link className="w-full h-full" to={`/screenshot/${screenshot.id}`} key={screenshot.id}>
+              <div className="w-full flex p-2 items-center justify-between hover:bg-foreground/20 transition-background duration-300">
+                <div className="grid grid-flow-col gap-2">
+                  <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} opacity-90 shadow-none`}>
+                    {screenshot.response_code}
+                  </Badge>
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                          <ClockIcon className="w-3 h-3" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="text-xs">
+                        <p>{timeAgo} - {rawDate}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div className="flex flex-wrap justify-end gap-1">
+                  {screenshot.technologies?.map(tech => {
+                    const iconUrl = getIconUrl(tech, wappalyzer);
+                    return iconUrl ? (
+                      <TooltipProvider key={tech} delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="w-5 h-5 flex items-center justify-center">
+                              <img
+                                src={iconUrl}
+                                alt={tech}
+                                loading="lazy"
+                                className="w-5 h-5 object-contain"
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tech}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : null;
+                  })}
+                </div>
+                
               </div>
-            </div>
+            </Link>
           </CardFooter>
         </Card>
-      </Link>
     );
   };
 

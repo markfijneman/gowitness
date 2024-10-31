@@ -324,7 +324,7 @@ const ScreenshotDetailPage = () => {
               <summary className="cursor-pointer font-semibold">
                 SAN List ({detail.tls.san_list.length})
               </summary>
-              <ul className="list-disc pl-5 mt-2">
+              <ul className="list-disc pl-5 mt-2 break-all font-mono">
                 {detail.tls.san_list.map((san, index) => (
                   <li key={index}>{san.value}</li>
                 ))}
