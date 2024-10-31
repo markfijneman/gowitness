@@ -70,6 +70,7 @@ func (s *Server) Run() {
 		}))
 
 		r.Get("/ping", apih.PingHandler)
+		r.Get("/runners", apih.RunnersHandler)
 		r.Get("/statistics", apih.StatisticsHandler)
 		r.Get("/wappalyzer", apih.WappalyzerHandler)
 		r.Post("/search", apih.SearchHandler)

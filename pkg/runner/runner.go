@@ -20,7 +20,7 @@ type Runner struct {
 	Wappalyzer *wappalyzer.Wappalyze
 
 	// options for the Runner to consider
-	options Options
+	Options Options
 	// writers are the result writers to use
 	writers []writers.Writer
 	// log handler
@@ -29,6 +29,13 @@ type Runner struct {
 	// Targets to scan.
 	// This would typically be fed from a gowitness/pkg/reader.
 	Targets chan string
+
+	// Number of targets to scan.
+	// Used in the report server frontend, should be updated manually
+	TargetCount int
+
+	// Number of completed targets
+	Completed int
 
 	// in case we need to bail
 	ctx    context.Context
@@ -74,14 +81,16 @@ func NewRunner(logger *slog.Logger, driver Driver, opts Options, writers []write
 	ctx, cancel := context.WithCancel(context.Background())
 
 	return &Runner{
-		Driver:     driver,
-		Wappalyzer: wap,
-		options:    opts,
-		writers:    writers,
-		Targets:    make(chan string),
-		log:        logger,
-		ctx:        ctx,
-		cancel:     cancel,
+		Driver:      driver,
+		Wappalyzer:  wap,
+		Options:     opts,
+		writers:     writers,
+		Targets:     make(chan string),
+		TargetCount: -1,
+		Completed:   0,
+		log:         logger,
+		ctx:         ctx,
+		cancel:      cancel,
 	}, nil
 }
 
@@ -103,7 +112,7 @@ func (run *Runner) checkUrl(target string) error {
 		return err
 	}
 
-	if !islazy.SliceHasStr(run.options.Scan.UriFilter, url.Scheme) {
+	if !islazy.SliceHasStr(run.Options.Scan.UriFilter, url.Scheme) {
 		return errors.New("url contains invalid scheme")
 	}
 
@@ -116,7 +125,7 @@ func (run *Runner) Run() {
 	wg := sync.WaitGroup{}
 
 	// will spawn Scan.Theads number of "workers" as goroutines
-	for w := 0; w < run.options.Scan.Threads; w++ {
+	for w := 0; w < run.Options.Scan.Threads; w++ {
 		wg.Add(1)
 
 		// start a worker
@@ -133,9 +142,10 @@ func (run *Runner) Run() {
 
 					// validate the target
 					if err := run.checkUrl(target); err != nil {
-						if run.options.Logging.LogScanErrors {
+						if run.Options.Logging.LogScanErrors {
 							run.log.Error("invalid target to scan", "target", target, "err", err)
 						}
+						run.Completed++
 						continue
 					}
 
@@ -149,24 +159,28 @@ func (run *Runner) Run() {
 							return
 						}
 
-						if run.options.Logging.LogScanErrors {
+						if run.Options.Logging.LogScanErrors {
 							run.log.Error("failed to witness target", "target", target, "err", err)
 						}
+						run.Completed++
 						continue
 					}
 
 					// assume that status code 0 means there was no information, so
 					// don't send anything to writers.
 					if result.ResponseCode == 0 {
-						if run.options.Logging.LogScanErrors {
+						if run.Options.Logging.LogScanErrors {
 							run.log.Error("failed to witness target, status code was 0", "target", target)
 						}
+						run.Completed++
 						continue
 					}
 
 					if err := run.runWriters(result); err != nil {
 						run.log.Error("failed to write result for target", "target", target, "err", err)
 					}
+
+					run.Completed++
 
 					run.log.Info("result 🤖", "target", target, "status-code", result.ResponseCode,
 						"title", result.Title, "have-screenshot", !result.Failed)

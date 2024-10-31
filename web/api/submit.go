@@ -104,7 +104,7 @@ func (h *ApiHandler) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// have everything we need! start ther runner goroutine
-	go dispatchRunner(runner, urls)
+	go h.dispatchRunner(runner, urls)
 
 	response := `Probing started`
 	jsonData, err := json.Marshal(response)
@@ -117,7 +117,7 @@ func (h *ApiHandler) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // dispatchRunner run's a runner in a separate goroutine
-func dispatchRunner(runner *runner.Runner, targets []string) {
+func (h *ApiHandler) dispatchRunner(runner *runner.Runner, targets []string) {
 	// feed in targets
 	go func() {
 		for _, url := range targets {
@@ -126,6 +126,19 @@ func dispatchRunner(runner *runner.Runner, targets []string) {
 		close(runner.Targets)
 	}()
 
+	runner.TargetCount = len(targets)
+
+	id := h.RunnerCounter
+	h.RunnerCounter++
+
+	h.Runners[id] = runner
+
+	log.Info("created runner", "id", id)
+
 	runner.Run()
 	runner.Close()
+
+	log.Info("runner finished", "id", id)
+
+	delete(h.Runners, id)
 }

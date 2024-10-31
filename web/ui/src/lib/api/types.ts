@@ -165,6 +165,14 @@ interface technologylist {
   technologies: string[];
 }
 
+// runners
+type runner = {
+  id: number;
+  target_count: number;
+  completed: number;
+  threads: number;
+}
+
 export type {
   statistics,
   wappalyzer,
@@ -181,4 +189,6 @@ export type {
   detail,
   searchresult,
   technologylist,
+  runner,
 };
+

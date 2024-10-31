@@ -12,6 +12,9 @@ vendor/
 # build artifacts
 build/
 
+# dependencies
+node_modules/
+
 # screenshots dir
 screenshots/
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon } from 'lucide-react';
+import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,118 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from '@/components/ui/scroll-area';
 import * as apitypes from "@/lib/api/types";
 import { TextArea } from '@/components/ui/textarea';
+import { getData } from './data';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Progress } from '@/components/ui/progress';
+
+interface ProbeOptionsProps {
+  isOptionsOpen: string;
+  setIsOptionsOpen: (value: string) => void;
+  advancedOptions: boolean;
+  setAdvancedOptions: (value: boolean) => void;
+}
+
+const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdvancedOptions }: ProbeOptionsProps)  => (
+  <Accordion
+    type="single"
+    collapsible
+    value={isOptionsOpen}
+    onValueChange={setIsOptionsOpen}>
+    <AccordionItem value="options">
+      <AccordionTrigger>
+        <div className="flex items-center">
+          <Settings className="mr-2 h-4 w-4" />
+          Options
+        </div>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="space-y-4 pt-4">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <Label htmlFor="format">Screenshot Format</Label>
+              <Select name="format" defaultValue="jpeg">
+                <SelectTrigger id="format">
+                  <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="png">PNG</SelectItem>
+                  <SelectItem value="jpeg">JPEG</SelectItem>
+                  <SelectItem value="pdf">PDF</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="timeout">Timeout (seconds)</Label>
+              <Input
+                id="timeout"
+                name="timeout"
+                type="number"
+                min="0"
+                defaultValue="60"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="delay">Screenshot Delay (seconds)</Label>
+              <Input
+                id="delay"
+                name="delay"
+                type="number"
+                min="0"
+                defaultValue="5"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="advanced-options"
+              checked={advancedOptions}
+              onCheckedChange={setAdvancedOptions}
+            />
+            <Label htmlFor="advanced-options">Advanced Options</Label>
+          </div>
+
+          {advancedOptions && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="user-agent">User Agent</Label>
+                <Input
+                  id="user-agent"
+                  name="user_agent"
+                  defaultValue="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="window-x">Window Width</Label>
+                  <Input
+                    id="window-x"
+                    name="window_x"
+                    type="number"
+                    min="0"
+                    defaultValue="1920"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="window-y">Window Height</Label>
+                  <Input
+                    id="window-y"
+                    name="window_y"
+                    type="number"
+                    min="0"
+                    defaultValue="1080"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+);
 
 export default function JobSubmissionPage() {
   const [urls, setUrls] = useState<string[]>(['']);
@@ -20,16 +132,26 @@ export default function JobSubmissionPage() {
   const [advancedOptions, setAdvancedOptions] = useState(false);
   const [immediateUrl, setImmediateUrl] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [runners, setRunners] = useState<apitypes.runner[]>([]);
   
   const navigation = useNavigation();
   const probeResult = useActionData() as apitypes.detail | null;
 
   useEffect(() => {
+    // fetch runner data every second
+    getData(setRunners);
+    const intervalId = setInterval(() => {
+      getData(setRunners);
+    }, 1000);
+
     probeResult
       ? setIsModalOpen(true)
       : setIsModalOpen(false);
-  }, [probeResult]);
 
+    return () => clearInterval(intervalId);
+  }, [probeResult]);
+  
   const handleUrlChange = (value: string) => {
     const valueUrls = value.split("\n");
     setUrls(valueUrls);
@@ -39,110 +161,17 @@ export default function JobSubmissionPage() {
     return urls.filter((url) => url.trim() !== "");
   }
 
-  const ProbeOptions = () => (
-    <Accordion
-      type="single"
-      collapsible
-      value={isOptionsOpen}
-      onValueChange={setIsOptionsOpen}>
-      <AccordionItem value="options">
-        <AccordionTrigger>
-          <div className="flex items-center">
-            <Settings className="mr-2 h-4 w-4" />
-            Options
-          </div>
-        </AccordionTrigger>
-        <AccordionContent>
-          <div className="space-y-4 pt-4">
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2">
-                <Label htmlFor="format">Screenshot Format</Label>
-                <Select name="format" defaultValue="jpeg">
-                  <SelectTrigger id="format">
-                    <SelectValue placeholder="Select format" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="png">PNG</SelectItem>
-                    <SelectItem value="jpeg">JPEG</SelectItem>
-                    <SelectItem value="pdf">PDF</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+  const sortedRunners = runners.sort((a, b) => a.id - b.id);
 
-              <div className="space-y-2">
-                <Label htmlFor="timeout">Timeout (seconds)</Label>
-                <Input
-                  id="timeout"
-                  name="timeout"
-                  type="number"
-                  min="0"
-                  defaultValue="60"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="delay">Screenshot Delay (seconds)</Label>
-                <Input
-                  id="delay"
-                  name="delay"
-                  type="number"
-                  min="0"
-                  defaultValue="5"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="advanced-options"
-                checked={advancedOptions}
-                onCheckedChange={setAdvancedOptions}
-              />
-              <Label htmlFor="advanced-options">Advanced Options</Label>
-            </div>
-
-            {advancedOptions && (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="user-agent">User Agent</Label>
-                  <Input
-                    id="user-agent"
-                    name="user_agent"
-                    defaultValue="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
-                  />
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="window-x">Window Width</Label>
-                    <Input
-                      id="window-x"
-                      name="window_x"
-                      type="number"
-                      min="0"
-                      defaultValue="1920"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="window-y">Window Height</Label>
-                    <Input
-                      id="window-y"
-                      name="window_y"
-                      type="number"
-                      min="0"
-                      defaultValue="1080"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
+  const resetInputs = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setUrls(['']);
+    return;
+  }
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto space-y-4">
       <Card>
         <CardHeader>
           <CardTitle className="flex flex-row items-center justify-between">
@@ -159,22 +188,27 @@ export default function JobSubmissionPage() {
             </TabsList>
             <TabsContent value="job">
               <Form method="post" className="space-y-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">URLs</h3>
+                <div className="space-y-4 mt-4">
+                  <h3 className="text-md font-semibold">URLs</h3>
                   <span className="text-sm text-muted-foreground">Enter 1 URL per line.</span>
-                    <div className="flex items-center space-x-2">
-                      <TextArea
-                        name="urls"
-                        placeholder="sensepost.com"
-                        value={urls.join("\n")}
-                        onChange={(e) => handleUrlChange(e.target.value)}
-                        className="flex-grow"
-                      />
-                    </div>
+                  <div className="flex items-center space-x-2">
+                    <TextArea
+                      name="urls"
+                      placeholder="sensepost.com"
+                      value={urls.join("\n")}
+                      onChange={(e) => handleUrlChange(e.target.value)}
+                      className="flex-grow"
+                    />
+                  </div>
                 </div>
                 <input type="hidden" name="action" value="job" />
 
-                <ProbeOptions />
+                <ProbeOptions 
+                  isOptionsOpen={isOptionsOpen} 
+                  setIsOptionsOpen={setIsOptionsOpen} 
+                  advancedOptions={advancedOptions} 
+                  setAdvancedOptions={setAdvancedOptions} 
+                />
 
                 {!advancedOptions && (
                   <>
@@ -188,8 +222,13 @@ export default function JobSubmissionPage() {
                 )}
 
                 <input type="hidden" name="action" value="job" />
+                
+                <div className="flex justify-between">
+                  <Button variant="outline" onClick={resetInputs} className="border-input" disabled={urls.join("\n").length == 0}>
+                    <RotateCcw className="mr-2 h-4 w-4" />
+                    Reset inputs
+                  </Button>
 
-                <div className="flex justify-end">
                   <Button type="submit" disabled={navigation.state === "submitting" || filteredUrls().length < 1}>
                     <Send className="mr-2 h-4 w-4" />
                     {navigation.state === "submitting" ? "Submitting..." : `Submit ${filteredUrls().length} target${filteredUrls().length != 1 ? "s" : ""}`}
@@ -200,7 +239,7 @@ export default function JobSubmissionPage() {
             <TabsContent value="immediate">
               <Form method="post" className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">URL</h3>
+                  <h3 className="text-md font-semibold mt-4">URL</h3>
                   <Input
                     type="url"
                     name="immediate-url"
@@ -211,7 +250,12 @@ export default function JobSubmissionPage() {
                   />
                 </div>
 
-                <ProbeOptions />
+                <ProbeOptions 
+                  isOptionsOpen={isOptionsOpen} 
+                  setIsOptionsOpen={setIsOptionsOpen} 
+                  advancedOptions={advancedOptions} 
+                  setAdvancedOptions={setAdvancedOptions} 
+                />
 
                 {!advancedOptions && (
                   <>
@@ -346,6 +390,48 @@ export default function JobSubmissionPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex flex-row items-center justify-between">
+            <CardTitle className="text-xl font-medium">Active Runners</CardTitle>
+            <SquarePlayIcon className="h-4 w-4 text-muted-foreground" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {runners.length === 0 ? (
+            <span className="text-muted-foreground">No active runners</span>
+          ) : (
+            <>
+              <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">ID</TableHead>
+                  <TableHead className="w-[100px]">Threads</TableHead>
+                  <TableHead className="w-full">Progress</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sortedRunners.map(item => (
+                  <TableRow key={item.id}>
+                    <TableCell>
+                      {item.id}
+                    </TableCell>
+                    <TableCell>
+                      {item.threads}
+                    </TableCell>
+                    <TableCell className="flex w-full items-center">
+                      <span className="mr-2">{item.completed} / {item.target_count}</span>
+                      <Progress className="flex-grow" progress={item.completed / item.target_count * 100} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+            </>
+          )}
+        </CardContent>
+      </Card>
 
     </div>
   );

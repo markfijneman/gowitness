@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/markfijneman/gowitness/pkg/database"
+	"github.com/markfijneman/gowitness/pkg/runner"
 	wappalyzer "github.com/projectdiscovery/wappalyzergo"
 	"gorm.io/gorm"
 )
@@ -10,6 +11,8 @@ import (
 type ApiHandler struct {
 	DbURI          string
 	ScreenshotPath string
+	Runners        map[int]*runner.Runner
+	RunnerCounter  int
 	DB             *gorm.DB
 	Wappalyzer     *wappalyzer.Wappalyze
 }
@@ -28,6 +31,8 @@ func NewApiHandler(uri string, screenshotPath string) (*ApiHandler, error) {
 	return &ApiHandler{
 		DbURI:          uri,
 		ScreenshotPath: screenshotPath,
+		Runners:        make(map[int]*runner.Runner),
+		RunnerCounter:  0,
 		DB:             conn,
 		Wappalyzer:     wap,
 	}, nil

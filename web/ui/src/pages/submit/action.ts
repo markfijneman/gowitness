@@ -28,7 +28,7 @@ const submitJobAction = async ({ formData }: { formData: FormData; }) => {
   } catch (err) {
     toast({
       title: "Error",
-      description: `Could not submit new probe: ${err}`,
+      description: `Could not submit new job: ${err}`,
       variant: "destructive"
     });
     return null;
@@ -36,7 +36,7 @@ const submitJobAction = async ({ formData }: { formData: FormData; }) => {
 
   toast({
     title: "Success!",
-    description: "Probe has been submitted"
+    description: "Job has been submitted"
   });
 
   return redirect("/submit");
@@ -58,7 +58,7 @@ const submitImmediateAction = async ({ formData }: { formData: FormData; }) => {
   } catch (err) {
     toast({
       title: "Error",
-      description: `Could not submit new probe: ${err}`,
+      description: `Could not submit new job: ${err}`,
       variant: "destructive"
     });
     return null;
