@@ -553,7 +553,7 @@ const GalleryPage = () => {
         {loading ? (
           <>
             {Array.from({length: limit}).map((_, index) => (
-              <Card key={"skeleton-" + index} className="group overflow-hidden flex flex-col h-full rounded-lg">
+              <Card key={"skeleton-" + index} className="group overflow-hidden shadow flex flex-col h-full rounded-lg bg-transparent">
                 <Skeleton className="w-full aspect-video rounded-none" />
                 <Skeleton className="h-[94px] rounded-none" />
               </Card>
