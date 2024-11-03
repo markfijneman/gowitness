@@ -200,7 +200,7 @@ const ScreenshotDetailPage = () => {
                 <img
                   src={api.endpoints.screenshot.path + "/" + detail.file_name}
                   alt={detail.title}
-                  className="bg-black absolute w-full h-full object-contain rounded-3xl"
+                  className="bg-black absolute w-full h-full object-contain rounded-3xl cursor-pointer"
                   onClick={() => setIsModalOpen(false)}
                 />
                 <button

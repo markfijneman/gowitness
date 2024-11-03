@@ -78,5 +78,10 @@ func Connection(uri string, shouldExist, debug bool) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	// add index on final_url to speed up queries where hide_duplicates is enabled
+	if err := c.Exec("CREATE INDEX IF NOT EXISTS idx_final_url_trimmed ON results (trim(final_url, '/'))").Error; err != nil {
+		return nil, fmt.Errorf("failed to add index on final_url: %w", err)
+	}
+
 	return c, nil
 }

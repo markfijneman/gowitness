@@ -41,6 +41,7 @@ const GalleryPage = () => {
   // toggles
   const perceptionGroup = searchParams.get("perception") === "true";
   const showFailed = searchParams.get("failed") !== "false"; // Default to true
+  const hideDuplicates = searchParams.get("hide_duplicates") !== "false";
 
   // cards
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,9 +54,9 @@ const GalleryPage = () => {
   useEffect(() => {
     getData(
       setLoading, setGallery, setTotalPages,
-      page, limit, technologyFilter, statusFilter, perceptionGroup, showFailed
+      page, limit, technologyFilter, statusFilter, perceptionGroup, showFailed, hideDuplicates
     );
-  }, [page, limit, perceptionGroup, statusFilter, technologyFilter, showFailed]);
+  }, [page, limit, perceptionGroup, statusFilter, technologyFilter, showFailed, hideDuplicates]);
 
   const handlePageChange = (newPage: number) => {
     setSearchParams(prev => {
@@ -115,6 +116,13 @@ const GalleryPage = () => {
   const handleToggleShowFailed = () => {
     setSearchParams(prev => {
       prev.set("failed", (!showFailed).toString());
+      return prev;
+    });
+  };
+
+  const handleToggleHideDuplicates = () => {
+    setSearchParams(prev => {
+      prev.set("hide_duplicates", (!hideDuplicates).toString());
       return prev;
     });
   };
@@ -373,6 +381,16 @@ const GalleryPage = () => {
             />
             <Label htmlFor="show-failed" className="text-sm">
               Show Failed
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2 p-2">
+            <Switch
+              id="hide-duplicates"
+              checked={hideDuplicates}
+              onCheckedChange={handleToggleHideDuplicates}
+            />
+            <Label htmlFor="hide-duplicates" className="text-sm">
+              Hide duplicates
             </Label>
           </div>
         </div>

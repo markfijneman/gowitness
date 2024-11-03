@@ -98,13 +98,27 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 		showFailed = true
 	}
 
+	// hide duplicate final URLs
+	var hideDuplicates bool
+	hideDuplicates, err = strconv.ParseBool(r.URL.Query().Get("hide_duplicates"))
+	if err != nil {
+		hideDuplicates = true
+	}
+
 	// query the db
 	var queryResults []*models.Result
 	query := h.DB.Model(&models.Result{}).Limit(results.Limit).
 		Offset(offset).Preload("Technologies")
 
+	if hideDuplicates {
+		// Trim away / so http to https redirects also get filtered out, as those commonly redirect from http://example.com to https://example.com/
+		query = query.Group("trim(final_url, '/')")
+	}
+
 	if perceptionSort {
 		query.Order("perception_hash_group_id DESC")
+	} else {
+		query.Order("probed_at ASC")
 	}
 
 	if len(statusCodes) > 0 {
