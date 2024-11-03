@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { WideSkeleton } from "@/components/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DatabaseIcon, FileTextIcon, ServerIcon, NetworkIcon, TerminalIcon } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Cell } from "recharts";
 import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import * as apitypes from "@/lib/api/types";
 import { getData } from "./data";
@@ -17,6 +17,13 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
+
+const getStatusGraphColor = (code: number) => {
+  if (code >= 200 && code < 300) return "rgb(34 197 94)"; // bg-green-500
+  if (code >= 400 && code < 500) return "rgb(234 179 8)"; // bg-yellow-500
+  if (code >= 500) return "rgb(239 68 68)"; // bg-red-500
+  return "rgb(107 114 128)"; // bg-gray-500
+};
 
 const StatCard = ({ title, value, icon: Icon }: { title: string; value: number | string; icon: React.ElementType; }) => (
   <Card className="overflow-hidden transition-all">
@@ -87,11 +94,14 @@ export default function DashboardPage() {
                 <YAxis
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `${value}%`}
                 />
                 <ChartTooltip content={<ChartTooltipContent hideLabel indicator="line" />} />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Bar dataKey="count" fill="var(--color-count)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                  {stats?.response_code_stats.map((entry, _) => (
+                    <Cell fill={getStatusGraphColor(entry.code)} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </ChartContainer>
