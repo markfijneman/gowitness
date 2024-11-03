@@ -2,10 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { WideSkeleton } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import {
-  AlertOctagonIcon, BanIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, CodeIcon, ExternalLink,
+  AlertOctagonIcon, BanIcon, CheckIcon, ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, CodeIcon, ExternalLink,
   GroupIcon, ShieldCheckIcon, TagsIcon, XIcon,
   ZoomInIcon
 } from "lucide-react";
@@ -22,6 +21,7 @@ import { getIconUrl, getStatusColor } from "@/lib/common";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 const GalleryPage = () => {
@@ -62,6 +62,7 @@ const GalleryPage = () => {
   }, [page, limit, perceptionGroup, tagFilter, statusFilter, technologyFilter, showFailed, hideDuplicates]);
 
   const handlePageChange = (newPage: number) => {
+    window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       prev.set("page", newPage.toString());
       return prev;
@@ -69,10 +70,12 @@ const GalleryPage = () => {
   };
 
   const handleLimitChange = (newLimit: string) => {
+    window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       prev.set("limit", newLimit);
       return prev;
     });
+    handlePageChange(1); // back to page 1
   };
 
   const handleTagChange = (tech: string) => {
@@ -112,6 +115,7 @@ const GalleryPage = () => {
   };
 
   const handleStatusFilter = (status: string) => {
+    window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       const currentStatus = prev.get("status")?.split(",").filter(Boolean) || [];
 
@@ -128,6 +132,7 @@ const GalleryPage = () => {
   };
 
   const handleGroupBySimilar = () => {
+    window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       prev.set("perception", (!perceptionGroup).toString());
       return prev;
@@ -135,6 +140,7 @@ const GalleryPage = () => {
   };
 
   const handleToggleShowFailed = () => {
+    window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       prev.set("failed", (!showFailed).toString());
       return prev;
@@ -142,6 +148,7 @@ const GalleryPage = () => {
   };
 
   const handleToggleHideDuplicates = () => {
+    window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       prev.set("hide_duplicates", (!hideDuplicates).toString());
       return prev;
@@ -179,6 +186,8 @@ const GalleryPage = () => {
           onClick={() => handlePageChange(i)}
           variant={i === page ? "secondary" : "outline"}
           size="sm"
+          className="h-9 min-w-9 text-sm"
+          disabled={loading}
         >
           {i}
         </Button>
@@ -334,10 +343,6 @@ const GalleryPage = () => {
     );
   };
 
-
-
-  if (loading) return <WideSkeleton />;
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-4 items-center justify-between rounded-lg">
@@ -365,6 +370,7 @@ const GalleryPage = () => {
                       <CommandItem
                         key={tag}
                         onSelect={() => handleTagChange(tag)}
+                        disabled={loading}
                       >
                         <CheckIcon
                           className={cn(
@@ -403,6 +409,7 @@ const GalleryPage = () => {
                       <CommandItem
                         key={tech}
                         onSelect={() => handleTechnologyChange(tech)}
+                        disabled={loading}
                       >
                         <CheckIcon
                           className={cn(
@@ -421,6 +428,7 @@ const GalleryPage = () => {
           <Button
             variant={statusFilter.includes("200") ? "secondary" : "outline"}
             onClick={() => handleStatusFilter("200")}
+            disabled={loading}
           >
             <ShieldCheckIcon className="mr-2 h-4 w-4" />
             200
@@ -428,6 +436,7 @@ const GalleryPage = () => {
           <Button
             variant={statusFilter.includes("403") ? "secondary" : "outline"}
             onClick={() => handleStatusFilter("403")}
+            disabled={loading}
           >
             <BanIcon className="mr-2 h-4 w-4" />
             403
@@ -435,6 +444,7 @@ const GalleryPage = () => {
           <Button
             variant={statusFilter.includes("500") ? "secondary" : "outline"}
             onClick={() => handleStatusFilter("500")}
+            disabled={loading}
           >
             <AlertOctagonIcon className="mr-2 h-4 w-4" />
             500
@@ -442,6 +452,7 @@ const GalleryPage = () => {
           <Button
             variant={perceptionGroup ? "secondary" : "outline"}
             onClick={handleGroupBySimilar}
+            disabled={loading}
           >
             <GroupIcon className="mr-2 h-4 w-4" />
             Group by Similar
@@ -451,6 +462,7 @@ const GalleryPage = () => {
               id="show-failed"
               checked={showFailed}
               onCheckedChange={handleToggleShowFailed}
+              disabled={loading}
             />
             <Label htmlFor="show-failed" className="text-sm">
               Show Failed
@@ -461,6 +473,7 @@ const GalleryPage = () => {
               id="hide-duplicates"
               checked={hideDuplicates}
               onCheckedChange={handleToggleHideDuplicates}
+              disabled={loading}
             />
             <Label htmlFor="hide-duplicates" className="text-sm">
               Hide duplicates
@@ -472,15 +485,20 @@ const GalleryPage = () => {
             variant="outline"
             size="icon"
             onClick={() => handlePageChange(page - 1)}
-            disabled={page <= 1}
+            disabled={page <= 1 || loading}
           >
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
+          <div
+            className="text-sm select-none"
+          >
+            {page} / {totalPages}
+          </div>
           <Button
             variant="outline"
             size="icon"
             onClick={() => handlePageChange(page + 1)}
-            disabled={page >= totalPages}
+            disabled={page >= totalPages || loading}
           >
             <ChevronRightIcon className="h-4 w-4" />
           </Button>
@@ -488,11 +506,24 @@ const GalleryPage = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {gallery?.map(screenshot => renderGalleryCard(screenshot))}
+        {loading ? (
+          <>
+            {Array.from({length: limit}).map((_, index) => (
+              <Card key={index} className="group overflow-hidden flex flex-col h-full rounded-lg">
+                <Skeleton className="w-full aspect-video rounded-none" />
+                <Skeleton className="h-[94px] rounded-none" />
+              </Card>
+            ))}
+          </>
+        ) : (
+          <>
+            {gallery?.map(screenshot => renderGalleryCard(screenshot))}
+          </>
+        )}
       </div>
 
       <div className="flex justify-between items-center mt-8">
-        <Select value={limit.toString()} onValueChange={handleLimitChange}>
+        <Select value={limit.toString()} onValueChange={handleLimitChange} disabled={loading}>
           <SelectTrigger className="w-[100px]">
             <SelectValue placeholder="Limit" />
           </SelectTrigger>
@@ -507,36 +538,36 @@ const GalleryPage = () => {
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => handlePageChange(1)}
-            disabled={page <= 1}
+            disabled={page <= 1 || loading}
           >
-            First
+            <ChevronFirstIcon className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => handlePageChange(page - 1)}
-            disabled={page <= 1}
+            disabled={page <= 1 || loading}
           >
-            «
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           {renderPageButtons(8)}
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => handlePageChange(page + 1)}
-            disabled={page >= totalPages}
+            disabled={page >= totalPages || loading}
           >
-            »
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => handlePageChange(totalPages)}
-            disabled={page >= totalPages}
+            disabled={page >= totalPages || loading}
           >
-            Last
+            <ChevronLastIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>
