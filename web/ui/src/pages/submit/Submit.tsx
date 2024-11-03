@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw, TagsIcon } from 'lucide-react';
+import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw, TagsIcon, AppWindowIcon, MoveHorizontalIcon, MoveVerticalIcon, FileImageIcon, LinkIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,9 +43,12 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
             <div className="space-y-2">
               <Label htmlFor="format">Screenshot Format</Label>
               <Select name="format" defaultValue="jpeg">
-                <SelectTrigger id="format">
-                  <SelectValue placeholder="Select format" />
-                </SelectTrigger>
+                <div className="relative">
+                  <FileImageIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <SelectTrigger id="format" className="pl-8">
+                    <SelectValue placeholder="Select format" />
+                  </SelectTrigger>
+                </div>
                 <SelectContent>
                   <SelectItem value="png">PNG</SelectItem>
                   <SelectItem value="jpeg">JPEG</SelectItem>
@@ -56,23 +59,31 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
 
             <div className="space-y-2">
               <Label htmlFor="timeout">Timeout (seconds)</Label>
-              <Input
-                id="timeout"
-                name="timeout"
-                type="number"
-                min="0"
-                defaultValue="60"
-              />
+              <div className="relative">
+                <ClockIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="timeout"
+                  name="timeout"
+                  type="number"
+                  min="0"
+                  defaultValue="60"
+                  className="pl-8"
+                />
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="delay">Screenshot Delay (seconds)</Label>
-              <Input
-                id="delay"
-                name="delay"
-                type="number"
-                min="0"
-                defaultValue="5"
-              />
+              <div className="relative">
+                <ClockIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="delay"
+                  name="delay"
+                  type="number"
+                  min="0"
+                  defaultValue="5"
+                  className="pl-8"
+                />
+              </div>
             </div>
           </div>
 
@@ -89,33 +100,45 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="user-agent">User Agent</Label>
-                <Input
-                  id="user-agent"
-                  name="user_agent"
-                  defaultValue="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
-                />
+                <div className="relative">
+                  <AppWindowIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="user-agent"
+                    name="user_agent"
+                    defaultValue="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+                    className="pl-8 font-mono"
+                  />
+                </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="window-x">Window Width</Label>
-                  <Input
-                    id="window-x"
-                    name="window_x"
-                    type="number"
-                    min="0"
-                    defaultValue="1920"
-                  />
+                  <div className="relative">
+                    <MoveHorizontalIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="window-x"
+                      name="window_x"
+                      type="number"
+                      min="0"
+                      defaultValue="1920"
+                      className="pl-8"
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="window-y">Window Height</Label>
-                  <Input
-                    id="window-y"
-                    name="window_y"
-                    type="number"
-                    min="0"
-                    defaultValue="1080"
-                  />
+                  <div className="relative">
+                    <MoveVerticalIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="window-y"
+                      name="window_y"
+                      type="number"
+                      min="0"
+                      defaultValue="1080"
+                      className="pl-8"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -255,14 +278,17 @@ export default function JobSubmissionPage() {
               <Form method="post" className="space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-md font-semibold mt-4">URL</h3>
-                  <Input
-                    type="url"
-                    name="immediate-url"
-                    placeholder="https://sensepost.com"
-                    value={immediateUrl}
-                    onChange={(e) => setImmediateUrl(e.target.value)}
-                    className="flex-grow font-mono"
-                  />
+                  <div className="relative">
+                    <LinkIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="url"
+                      name="immediate-url"
+                      placeholder="https://sensepost.com"
+                      value={immediateUrl}
+                      onChange={(e) => setImmediateUrl(e.target.value)}
+                      className="flex-grow font-mono pl-8"
+                    />
+                  </div>
                 </div>
 
                 <ProbeOptions 

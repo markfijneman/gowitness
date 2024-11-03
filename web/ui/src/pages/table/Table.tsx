@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowUpDown, XIcon } from "lucide-react";
+import { ArrowUpDown, FilterIcon, SearchIcon, XIcon } from "lucide-react";
 import * as apitypes from "@/lib/api/types";
 import { copyToClipboard, getStatusColor } from "@/lib/common";
 import { getData } from "./data";
@@ -58,21 +58,27 @@ export default function TablePage() {
     <>
       <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-2">
         <div className="flex items-center w-full md:w-auto">
-          <Input
-            placeholder="Filter by URL or title..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="mr-2"
-          />
+          <div className="relative mr-2">
+            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by URL or title..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8"
+            />
+          </div>
           <Button variant="outline" size="icon" onClick={() => setSearchTerm("")}>
             <XIcon className="h-4 w-4" />
           </Button>
         </div>
         <div className="flex items-center space-x-2 w-full md:w-auto">
           <Select value={filterStatus} onValueChange={(value: "all" | "success" | "error") => setFilterStatus(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
+            <div className="relative mr-2">
+              <FilterIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <SelectTrigger className="w-[120px] pl-8">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+            </div>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
               <SelectItem value="success">Success</SelectItem>
