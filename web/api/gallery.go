@@ -183,7 +183,10 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	if err := h.DB.Model(&models.Result{}).Count(&results.TotalCount).Error; err != nil {
+	// count total results after filtering
+	query.Limit(-1).Offset(-1)
+
+	if err := query.Count(&results.TotalCount).Error; err != nil {
 		log.Error("could not count total results", "err", err)
 		return
 	}
