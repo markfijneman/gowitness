@@ -27,6 +27,7 @@ type galleryContent struct {
 	Filename     string    `json:"file_name"`
 	Screenshot   string    `json:"screenshot"`
 	Failed       bool      `json:"failed"`
+	Tags         []string  `json:"tags"`
 	Technologies []string  `json:"technologies"`
 }
 
@@ -39,8 +40,9 @@ type galleryContent struct {
 //	@Produce		json
 //	@Param			page			query		int		false	"The page to load."
 //	@Param			limit			query		int		false	"Number of results per page."
-//	@Param			technologies	query		string	false	"A comma seperated list of technologies to filter by."
-//	@Param			status			query		string	false	"A comma seperated list of HTTP status codes to filter by."
+//	@Param			tags			query		string	false	"A comma separated list of technologies to filter by."
+//	@Param			technologies	query		string	false	"A comma separated list of technologies to filter by."
+//	@Param			status			query		string	false	"A comma separated list of HTTP status codes to filter by."
 //	@Param			perception		query		boolean	false	"Order the results by perception hash."
 //	@Param			failed			query		boolean	false	"Include failed screenshots in the results."
 //	@Success		200				{object}	galleryResponse
@@ -84,6 +86,13 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// tag filtering
+	var tags []string
+	tagFilterValue := r.URL.Query().Get("tags")
+	if tagFilterValue != "" {
+		tags = append(tags, strings.Split(tagFilterValue, ",")...)
+	}
+
 	// technology filtering
 	var technologies []string
 	technologyFilterValue := r.URL.Query().Get("technologies")
@@ -108,7 +117,7 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 	// query the db
 	var queryResults []*models.Result
 	query := h.DB.Model(&models.Result{}).Limit(results.Limit).
-		Offset(offset).Preload("Technologies")
+		Offset(offset).Preload("Tags").Preload("Technologies")
 
 	if hideDuplicates {
 		// Trim away / so http to https redirects also get filtered out, as those commonly redirect from http://example.com to https://example.com/
@@ -123,6 +132,12 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 
 	if len(statusCodes) > 0 {
 		query.Where("response_code IN ?", statusCodes)
+	}
+
+	if len(tags) > 0 {
+		query.Where("id in (?)", h.DB.Model(&models.Tag{}).
+			Select("result_id").Distinct("result_id").
+			Where("value IN (?)", tags))
 	}
 
 	if len(technologies) > 0 {
@@ -143,6 +158,11 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 
 	// extract Technologies for each result
 	for _, result := range queryResults {
+		var tags []string
+		for _, tag := range result.Tags {
+			tags = append(tags, tag.Value)
+		}
+
 		var technologies []string
 		for _, tech := range result.Technologies {
 			technologies = append(technologies, tech.Value)
@@ -158,6 +178,7 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 			Filename:     result.Filename,
 			Screenshot:   result.Screenshot,
 			Failed:       result.Failed,
+			Tags:         tags,
 			Technologies: technologies,
 		})
 	}

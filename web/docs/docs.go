@@ -132,13 +132,19 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "A comma seperated list of technologies to filter by.",
+                        "description": "A comma separated list of technologies to filter by.",
+                        "name": "tags",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "A comma separated list of technologies to filter by.",
                         "name": "technologies",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "A comma seperated list of HTTP status codes to filter by.",
+                        "description": "A comma separated list of HTTP status codes to filter by.",
                         "name": "status",
                         "in": "query"
                     },
@@ -183,6 +189,29 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/api.listResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/results/tag": {
+            "get": {
+                "description": "Get all unique tags.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Results"
+                ],
+                "summary": "Get tag results",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.tagListResponse"
                         }
                     }
                 }
@@ -416,6 +445,12 @@ const docTemplate = `{
                 "screenshot": {
                     "type": "string"
                 },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "technologies": {
                     "type": "array",
                     "items": {
@@ -618,6 +653,12 @@ const docTemplate = `{
                 "format": {
                     "type": "string"
                 },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "timeout": {
                     "type": "integer"
                 },
@@ -640,6 +681,17 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "api.tagListResponse": {
+            "type": "object",
+            "properties": {
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -858,6 +910,12 @@ const docTemplate = `{
                 "screenshot": {
                     "type": "string"
                 },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Tag"
+                    }
+                },
                 "technologies": {
                     "type": "array",
                     "items": {
@@ -926,6 +984,20 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "tls_id": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Tag": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "result_id": {
                     "type": "integer"
                 },
                 "value": {

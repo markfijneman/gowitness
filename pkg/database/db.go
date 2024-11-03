@@ -69,6 +69,7 @@ func Connection(uri string, shouldExist, debug bool) (*gorm.DB, error) {
 		&models.Result{},
 		&models.TLS{},
 		&models.TLSSanList{},
+		&models.Tag{},
 		&models.Technology{},
 		&models.Header{},
 		&models.NetworkLog{},

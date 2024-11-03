@@ -411,6 +411,13 @@ func (run *Chromedp) Witness(target string, thisRunner *runner.Runner) (*models.
 		}
 	}
 
+	// add tags
+	for _, tag := range run.options.Scan.Tags {
+		result.Tags = append(result.Tags, models.Tag{
+			Value: tag,
+		})
+	}
+
 	// grab a screenshot
 	var img []byte
 	err = chromedp.Run(navigationCtx,

@@ -18,6 +18,10 @@ definitions:
         type: integer
       screenshot:
         type: string
+      tags:
+        items:
+          type: string
+        type: array
       technologies:
         items:
           type: string
@@ -150,6 +154,10 @@ definitions:
         type: integer
       format:
         type: string
+      tags:
+        items:
+          type: string
+        type: array
       timeout:
         type: integer
       user_agent:
@@ -165,6 +173,13 @@ definitions:
         $ref: '#/definitions/api.submitRequestOptions'
       url:
         type: string
+    type: object
+  api.tagListResponse:
+    properties:
+      tags:
+        items:
+          type: string
+        type: array
     type: object
   api.technologyListResponse:
     properties:
@@ -309,6 +324,10 @@ definitions:
         type: string
       screenshot:
         type: string
+      tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
       technologies:
         items:
           $ref: '#/definitions/models.Technology'
@@ -354,6 +373,15 @@ definitions:
       id:
         type: integer
       tls_id:
+        type: integer
+      value:
+        type: string
+    type: object
+  models.Tag:
+    properties:
+      id:
+        type: integer
+      result_id:
         type: integer
       value:
         type: string
@@ -443,11 +471,15 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: A comma seperated list of technologies to filter by.
+      - description: A comma separated list of technologies to filter by.
+        in: query
+        name: tags
+        type: string
+      - description: A comma separated list of technologies to filter by.
         in: query
         name: technologies
         type: string
-      - description: A comma seperated list of HTTP status codes to filter by.
+      - description: A comma separated list of HTTP status codes to filter by.
         in: query
         name: status
         type: string
@@ -482,6 +514,21 @@ paths:
           schema:
             $ref: '#/definitions/api.listResponse'
       summary: Results list
+      tags:
+      - Results
+  /results/tag:
+    get:
+      consumes:
+      - application/json
+      description: Get all unique tags.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.tagListResponse'
+      summary: Get tag results
       tags:
       - Results
   /results/technology:

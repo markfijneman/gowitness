@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw } from 'lucide-react';
+import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw, TagsIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -128,6 +128,7 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
 
 export default function JobSubmissionPage() {
   const [urls, setUrls] = useState<string[]>(['']);
+  const [tags, setTags] = useState<string>('');
   const [isOptionsOpen, setIsOptionsOpen] = useState('');
   const [advancedOptions, setAdvancedOptions] = useState(false);
   const [immediateUrl, setImmediateUrl] = useState<string>('');
@@ -167,6 +168,7 @@ export default function JobSubmissionPage() {
     event.preventDefault();
     event.stopPropagation();
     setUrls(['']);
+    setTags('');
     return;
   }
 
@@ -200,6 +202,19 @@ export default function JobSubmissionPage() {
                       className="flex-grow"
                     />
                   </div>
+                  <h3 className="text-md font-semibold">Tags</h3>
+                  <span className="text-sm text-muted-foreground">Separate multiple tags using <code>,</code>.</span>
+                  <div className="relative">
+                    <TagsIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      name="tags"
+                      placeholder="tag1,tag2"
+                      value={tags}
+                      onChange={(e) => setTags(e.target.value)}
+                      className="flex-grow font-mono pl-8"
+                    />
+                  </div>
                 </div>
                 <input type="hidden" name="action" value="job" />
 
@@ -224,7 +239,7 @@ export default function JobSubmissionPage() {
                 <input type="hidden" name="action" value="job" />
                 
                 <div className="flex justify-between">
-                  <Button variant="outline" onClick={resetInputs} className="border-input" disabled={urls.join("\n").length == 0}>
+                  <Button variant="outline" onClick={resetInputs} className="border-input" disabled={urls.join("\n").length == 0 && tags.length == 0}>
                     <RotateCcw className="mr-2 h-4 w-4" />
                     Reset inputs
                   </Button>

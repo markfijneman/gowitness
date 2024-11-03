@@ -18,12 +18,13 @@ type submitRequest struct {
 }
 
 type submitRequestOptions struct {
-	X         int    `json:"window_x"`
-	Y         int    `json:"window_y"`
-	UserAgent string `json:"user_agent"`
-	Timeout   int    `json:"timeout"`
-	Delay     int    `json:"delay"`
-	Format    string `json:"format"`
+	X         int      `json:"window_x"`
+	Y         int      `json:"window_y"`
+	Tags      []string `json:"tags"`
+	UserAgent string   `json:"user_agent"`
+	Timeout   int      `json:"timeout"`
+	Delay     int      `json:"delay"`
+	Format    string   `json:"format"`
 }
 
 // SubmitHandler submits URL's for scans, writing them to the database.
@@ -59,6 +60,9 @@ func (h *ApiHandler) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if request.Options.Y != 0 {
 			options.Chrome.WindowY = request.Options.Y
+		}
+		if len(request.Options.Tags) > 0 {
+			options.Scan.Tags = request.Options.Tags
 		}
 		if request.Options.UserAgent != "" {
 			options.Chrome.UserAgent = request.Options.UserAgent

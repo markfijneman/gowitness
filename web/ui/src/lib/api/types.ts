@@ -35,6 +35,7 @@ type galleryResult = {
   file_name: string;
   screenshot: string;
   failed: boolean;
+  tags: string[];
   technologies: string[];
 };
 
@@ -71,6 +72,12 @@ interface tls {
 interface sanlist {
   id: number;
   tls_id: number;
+  value: string;
+}
+
+interface tag {
+  id: number;
+  result_id: number;
   value: string;
 }
 
@@ -142,6 +149,7 @@ interface detail {
   failed_reason: string;
   screenshot: string;
   tls: tls;
+  tags: tag[];
   technologies: technology[];
   headers: header[];
   network: networklog[];
@@ -159,6 +167,10 @@ interface searchresult {
   matched_fields: string[];
   file_name: string;
   screenshot: string;
+}
+
+interface taglist {
+  tags: string[];
 }
 
 interface technologylist {
@@ -188,6 +200,7 @@ export type {
   cookie,
   detail,
   searchresult,
+  taglist,
   technologylist,
   runner,
 };

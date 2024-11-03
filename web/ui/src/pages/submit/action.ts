@@ -14,7 +14,12 @@ const submitJobAction = async ({ formData }: { formData: FormData; }) => {
     return { error: "Please enter at least one URL" };
   }
 
+  const tags = (formData.get('tags') as string)
+    .split(",")
+    .filter(tag => tag !== '');
+
   const options = {
+    tags,
     format: formData.get('format'),
     timeout: parseInt(formData.get('timeout') as string),
     delay: parseInt(formData.get('delay') as string),

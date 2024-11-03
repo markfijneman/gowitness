@@ -37,6 +37,7 @@ type Result struct {
 	Failed       bool   `json:"failed"`
 	FailedReason string `json:"failed_reason"`
 
+	Tags         []Tag        `json:"tags" gorm:"constraint:OnDelete:CASCADE"`
 	TLS          TLS          `json:"tls" gorm:"constraint:OnDelete:CASCADE"`
 	Technologies []Technology `json:"technologies" gorm:"constraint:OnDelete:CASCADE"`
 
@@ -54,6 +55,13 @@ func (r *Result) HeaderMap() map[string][]string {
 	}
 
 	return headersMap
+}
+
+type Tag struct {
+	ID       uint `json:"id" gorm:"primarykey"`
+	ResultID uint `json:"result_id"`
+
+	Value string `json:"value" gorm:"index"`
 }
 
 type TLS struct {

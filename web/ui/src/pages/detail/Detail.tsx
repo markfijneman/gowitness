@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ExternalLink, ChevronLeft, ChevronRight, ClockIcon, Trash2Icon, DownloadIcon, ImagesIcon, ZoomInIcon, CopyIcon, NetworkIcon, TerminalIcon, ServerIcon, CookieIcon, CodeIcon } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight, ClockIcon, Trash2Icon, DownloadIcon, ImagesIcon, ZoomInIcon, CopyIcon, NetworkIcon, TerminalIcon, ServerIcon, CookieIcon, CodeIcon, TagsIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
 import { WideSkeleton } from '@/components/loading';
 import { Form, Link, useNavigate, useParams } from 'react-router-dom';
@@ -240,6 +240,34 @@ const ScreenshotDetailPage = () => {
       </Card>
     );
   };
+
+  const tagsCard = (detail: apitypes.detail) => {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex flex-row items-center justify-between">
+            <CardTitle className="text-xl font-medium">Tags</CardTitle>
+            <TagsIcon className="h-4 w-4 text-muted-foreground" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {detail.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {detail.tags.map((tag) => {
+                return (
+                  <Badge key={tag.id} variant="default" className="bg-purple-600 text-white shadow-none">
+                    {tag.value}
+                  </Badge>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No tags found</p>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
 
   const techCard = (detail: apitypes.detail) => {
     return (
@@ -707,6 +735,7 @@ const ScreenshotDetailPage = () => {
         {/* Left Column */}
         <div className="w-full lg:w-2/5 space-y-4">
           {infoCard(detail)}
+          {tagsCard(detail)}
           {techCard(detail)}
           {tlsCard(detail)}
         </div>

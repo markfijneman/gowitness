@@ -89,6 +89,8 @@ type Scan struct {
 	// Save content stores content from network requests (warning) this
 	// could make written artefacts huge
 	SaveContent bool
+	// tags used to manually categorize results
+	Tags []string
 }
 
 // NewDefaultOptions returns Options with some default values

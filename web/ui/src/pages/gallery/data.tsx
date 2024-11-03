@@ -22,12 +22,28 @@ const getWappalyzerData = async (
   }
 };
 
+const getTagData = async (
+  setTag: React.Dispatch<React.SetStateAction<apitypes.taglist | undefined>>
+) => {
+  try {
+    const s = await api.get('tag');
+    setTag(s);
+  } catch (err) {
+    toast({
+      title: "API Error",
+      variant: "destructive",
+      description: `Failed to get wappalyzer / technology data: ${err}`
+    });
+  }
+};
+
 const getData = async (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   setGallery: React.Dispatch<React.SetStateAction<apitypes.galleryResult[] | undefined>>,
   setTotalPages: React.Dispatch<React.SetStateAction<number>>,
   page: number,
   limit: number,
+  tagFilter: string,
   technologyFilter: string,
   statusFilter: string,
   perceptionGroup: boolean,
@@ -39,6 +55,7 @@ const getData = async (
     const s = await api.get('gallery', {
       page,
       limit,
+      tags: tagFilter,
       technologies: technologyFilter,
       status: statusFilter,
       perception: perceptionGroup ? 'true' : 'false',
@@ -58,4 +75,4 @@ const getData = async (
   }
 };
 
-export { getWappalyzerData, getData };
+export { getWappalyzerData, getTagData, getData };

@@ -5,8 +5,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { WideSkeleton } from "@/components/loading";
 import { Badge } from "@/components/ui/badge";
 import {
-  AlertOctagonIcon, BanIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, ExternalLink,
-  FilterIcon, GroupIcon, ShieldCheckIcon, XIcon,
+  AlertOctagonIcon, BanIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, CodeIcon, ExternalLink,
+  GroupIcon, ShieldCheckIcon, TagsIcon, XIcon,
   ZoomInIcon
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,7 +17,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { cn } from "@/lib/utils";
 import * as api from "@/lib/api/api";
 import * as apitypes from "@/lib/api/types";
-import { getData, getWappalyzerData } from "./data";
+import { getData, getTagData, getWappalyzerData } from "./data";
 import { getIconUrl, getStatusColor } from "@/lib/common";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -27,6 +27,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 const GalleryPage = () => {
   const [gallery, setGallery] = useState<apitypes.galleryResult[]>();
   const [wappalyzer, setWappalyzer] = useState<apitypes.wappalyzer>();
+  const [tag, setTag] = useState<apitypes.taglist>();
   const [technology, setTechnology] = useState<apitypes.technologylist>();
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ const GalleryPage = () => {
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "24");
   // filters
+  const tagFilter = searchParams.get("tags") || "";
   const technologyFilter = searchParams.get("technologies") || "";
   const statusFilter = searchParams.get("status") || "";
   // toggles
@@ -49,14 +51,15 @@ const GalleryPage = () => {
 
   useEffect(() => {
     getWappalyzerData(setWappalyzer, setTechnology);
+    getTagData(setTag);
   }, []);
 
   useEffect(() => {
     getData(
       setLoading, setGallery, setTotalPages,
-      page, limit, technologyFilter, statusFilter, perceptionGroup, showFailed, hideDuplicates
+      page, limit, tagFilter, technologyFilter, statusFilter, perceptionGroup, showFailed, hideDuplicates
     );
-  }, [page, limit, perceptionGroup, statusFilter, technologyFilter, showFailed, hideDuplicates]);
+  }, [page, limit, perceptionGroup, tagFilter, statusFilter, technologyFilter, showFailed, hideDuplicates]);
 
   const handlePageChange = (newPage: number) => {
     setSearchParams(prev => {
@@ -70,6 +73,24 @@ const GalleryPage = () => {
       prev.set("limit", newLimit);
       return prev;
     });
+  };
+
+  const handleTagChange = (tech: string) => {
+    const field = "tags";
+    setSearchParams(prev => {
+      const currentTag = prev.get(field)?.split(",").filter(Boolean) || [];
+
+      if (currentTag.includes(tech)) {
+        const updatedTag = currentTag.filter(s => s !== tech);
+        prev.set(field, updatedTag.join(","));
+      } else {
+        currentTag.push(tech);
+        prev.set(field, currentTag.join(","));
+      }
+
+      return prev;
+    });
+    handlePageChange(1); // back to page 1
   };
 
   const handleTechnologyChange = (tech: string) => {
@@ -126,6 +147,15 @@ const GalleryPage = () => {
       return prev;
     });
   };
+
+  const sortedTags = useMemo(() => {
+    if (!tag) return [];
+    const selectedTags = tagFilter.split(',').filter(Boolean);
+    return [
+      ...selectedTags,
+      ...tag.tags.filter(tag => !selectedTags.includes(tag))
+    ];
+  }, [technology, technologyFilter]);
 
   const sortedTechnologies = useMemo(() => {
     if (!technology) return [];
@@ -250,10 +280,15 @@ const GalleryPage = () => {
             </Link>
             <Link className="w-full h-full" to={`/screenshot/${screenshot.id}`} key={screenshot.id}>
               <div className="w-full flex p-2 items-center justify-between hover:bg-foreground/20 transition-background duration-300">
-                <div className="grid grid-flow-col gap-2">
-                  <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} opacity-90 shadow-none`}>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} shadow-none`}>
                     {screenshot.response_code}
                   </Badge>
+                  {screenshot.tags?.map(tag => (
+                    <Badge variant="default" className="bg-purple-600 text-white shadow-none">
+                      {tag}
+                    </Badge>
+                  ))}
                   <TooltipProvider delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -309,22 +344,60 @@ const GalleryPage = () => {
         <div className="flex flex-wrap gap-2">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[200px] justify-start">
-                <FilterIcon className="mr-2 h-4 w-4" />
-                {technologyFilter.split(',').filter(n => n).length > 0 ? (
+              <Button variant="outline" className="w-[210px]">
+                <TagsIcon className="mr-2 h-4 w-4" />
+                {tagFilter.split(',').filter(n => n).length > 0 ? (
                   <>
-                    {technologyFilter.split(',').length} selected
+                    {tagFilter.split(',').length} tag{tagFilter.split(',').length > 1 ? 's' : ''} selected
                   </>
                 ) : (
-                  "Filter by Technology"
+                  "Tags"
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[210px] p-0">
+              <Command>
+                <CommandInput placeholder="Search tags..." />
+                <CommandList>
+                  <CommandEmpty>No tags found.</CommandEmpty>
+                  <CommandGroup>
+                    {sortedTags.map((tag) => (
+                      <CommandItem
+                        key={tag}
+                        onSelect={() => handleTagChange(tag)}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            tagFilter.includes(tag) ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {tag}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-[210px]">
+                <CodeIcon className="mr-2 h-4 w-4" />
+                {technologyFilter.split(',').filter(n => n).length > 0 ? (
+                  <>
+                    {technologyFilter.split(',').length} {technologyFilter.split(',').length > 1 ? 'technologies' : 'technology'} selected
+                  </>
+                ) : (
+                  "Technologies"
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[210px] p-0">
               <Command>
                 <CommandInput placeholder="Search technologies..." />
                 <CommandList>
-                  <CommandEmpty>No technology found.</CommandEmpty>
+                  <CommandEmpty>No technologies found.</CommandEmpty>
                   <CommandGroup>
                     {sortedTechnologies.map((tech) => (
                       <CommandItem
