@@ -211,6 +211,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/runners": {
+            "get": {
+                "description": "Get runner statistics.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Results"
+                ],
+                "summary": "Runner statistics",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.runnersResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/search": {
             "post": {
                 "description": "Searches for results based on free form text, or operators.",
@@ -460,6 +483,23 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "api.runnersResponse": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "target_count": {
+                    "type": "integer"
+                },
+                "threads": {
+                    "type": "integer"
                 }
             }
         },

@@ -64,6 +64,17 @@ definitions:
       url:
         type: string
     type: object
+  api.runnersResponse:
+    properties:
+      completed:
+        type: integer
+      id:
+        type: integer
+      target_count:
+        type: integer
+      threads:
+        type: integer
+    type: object
   api.searchRequest:
     properties:
       query:
@@ -486,6 +497,21 @@ paths:
           schema:
             $ref: '#/definitions/api.technologyListResponse'
       summary: Get technology results
+      tags:
+      - Results
+  /runners:
+    get:
+      consumes:
+      - application/json
+      description: Get runner statistics.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.runnersResponse'
+      summary: Runner statistics
       tags:
       - Results
   /search:
