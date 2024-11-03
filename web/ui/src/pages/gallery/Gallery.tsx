@@ -5,7 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertOctagonIcon, BanIcon, CheckIcon, ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, CodeIcon, ExternalLink,
-  GroupIcon, ShieldCheckIcon, TagsIcon, XIcon,
+  GroupIcon, SettingsIcon, ShieldCheckIcon, TagsIcon, XIcon,
   ZoomInIcon
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,8 +18,6 @@ import * as api from "@/lib/api/api";
 import * as apitypes from "@/lib/api/types";
 import { getData, getTagData, getWappalyzerData } from "./data";
 import { getIconUrl, getStatusColor } from "@/lib/common";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -457,28 +455,46 @@ const GalleryPage = () => {
             <GroupIcon className="mr-2 h-4 w-4" />
             Group by Similar
           </Button>
-          <div className="flex items-center space-x-2 p-2">
-            <Switch
-              id="show-failed"
-              checked={showFailed}
-              onCheckedChange={handleToggleShowFailed}
-              disabled={loading}
-            />
-            <Label htmlFor="show-failed" className="text-sm">
-              Show Failed
-            </Label>
-          </div>
-          <div className="flex items-center space-x-2 p-2">
-            <Switch
-              id="hide-duplicates"
-              checked={hideDuplicates}
-              onCheckedChange={handleToggleHideDuplicates}
-              disabled={loading}
-            />
-            <Label htmlFor="hide-duplicates" className="text-sm">
-              Hide duplicates
-            </Label>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <SettingsIcon className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[150px] p-0">
+              <Command>
+                <CommandList>
+                  <CommandGroup>
+                    <CommandItem
+                      onSelect={handleToggleShowFailed}
+                      disabled={loading}
+                    >
+                      <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            showFailed ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      Show failed
+                    </CommandItem>
+                    <CommandItem
+                      onSelect={handleToggleHideDuplicates}
+                      disabled={loading}
+                    >
+                      <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            hideDuplicates ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      Hide duplicates
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex items-center space-x-2">
           <Button
