@@ -177,6 +177,10 @@ interface technologylist {
   technologies: string[];
 }
 
+interface responsecodelist {
+  response_codes: number[];
+}
+
 // runners
 type runner = {
   id: number;
@@ -202,6 +206,7 @@ export type {
   searchresult,
   taglist,
   technologylist,
+  responsecodelist,
   runner,
 };
 

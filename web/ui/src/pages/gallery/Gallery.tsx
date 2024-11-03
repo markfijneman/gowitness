@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import {
-  AlertOctagonIcon, BanIcon, CheckIcon, ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, CodeIcon, ExternalLink,
-  GroupIcon, SettingsIcon, ShieldCheckIcon, TagsIcon, XIcon,
+  CheckIcon, ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, CodeIcon, ExternalLink,
+  FileIcon,
+  GroupIcon, SettingsIcon, TagsIcon, XIcon,
   ZoomInIcon
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -16,7 +17,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { cn } from "@/lib/utils";
 import * as api from "@/lib/api/api";
 import * as apitypes from "@/lib/api/types";
-import { getData, getTagData, getWappalyzerData } from "./data";
+import { getData, getResponseCodeData, getTagData, getWappalyzerData } from "./data";
 import { getIconUrl, getStatusColor } from "@/lib/common";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,6 +28,7 @@ const GalleryPage = () => {
   const [wappalyzer, setWappalyzer] = useState<apitypes.wappalyzer>();
   const [tag, setTag] = useState<apitypes.taglist>();
   const [technology, setTechnology] = useState<apitypes.technologylist>();
+  const [responseCode, setResponseCode] = useState<apitypes.responsecodelist>();
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +39,7 @@ const GalleryPage = () => {
   // filters
   const tagFilter = searchParams.get("tags") || "";
   const technologyFilter = searchParams.get("technologies") || "";
-  const statusFilter = searchParams.get("status") || "";
+  const responseCodeFilter = searchParams.get("status") || "";
   // toggles
   const perceptionGroup = searchParams.get("perception") === "true";
   const showFailed = searchParams.get("failed") !== "false"; // Default to true
@@ -48,16 +50,17 @@ const GalleryPage = () => {
   const [modalId, setModalId] = useState<number | null>(null);
 
   useEffect(() => {
-    getWappalyzerData(setWappalyzer, setTechnology);
     getTagData(setTag);
+    getWappalyzerData(setWappalyzer, setTechnology);
+    getResponseCodeData(setResponseCode);
   }, []);
 
   useEffect(() => {
     getData(
       setLoading, setGallery, setTotalPages,
-      page, limit, tagFilter, technologyFilter, statusFilter, perceptionGroup, showFailed, hideDuplicates
+      page, limit, tagFilter, technologyFilter, responseCodeFilter, perceptionGroup, showFailed, hideDuplicates
     );
-  }, [page, limit, perceptionGroup, tagFilter, statusFilter, technologyFilter, showFailed, hideDuplicates]);
+  }, [page, limit, perceptionGroup, tagFilter, responseCodeFilter, technologyFilter, showFailed, hideDuplicates]);
 
   const handlePageChange = (newPage: number) => {
     window.scrollTo({ top: 0 });
@@ -76,16 +79,16 @@ const GalleryPage = () => {
     handlePageChange(1); // back to page 1
   };
 
-  const handleTagChange = (tech: string) => {
+  const handleTagChange = (tag: string) => {
     const field = "tags";
     setSearchParams(prev => {
       const currentTag = prev.get(field)?.split(",").filter(Boolean) || [];
 
-      if (currentTag.includes(tech)) {
-        const updatedTag = currentTag.filter(s => s !== tech);
+      if (currentTag.includes(tag)) {
+        const updatedTag = currentTag.filter(s => s !== tag);
         prev.set(field, updatedTag.join(","));
       } else {
-        currentTag.push(tech);
+        currentTag.push(tag);
         prev.set(field, currentTag.join(","));
       }
 
@@ -112,21 +115,22 @@ const GalleryPage = () => {
     handlePageChange(1); // back to page 1
   };
 
-  const handleStatusFilter = (status: string) => {
-    window.scrollTo({ top: 0 });
+  const handleResponseCodeChange = (responseCode: string) => {
+    const field = "status";;
     setSearchParams(prev => {
-      const currentStatus = prev.get("status")?.split(",").filter(Boolean) || [];
+      const currentResponseCode = prev.get(field)?.split(",").filter(Boolean) || [];
 
-      if (currentStatus.includes(status)) {
-        const updatedStatus = currentStatus.filter(s => s !== status);
-        prev.set("status", updatedStatus.join(","));
+      if (currentResponseCode.includes(responseCode)) {
+        const updatedResponseCode = currentResponseCode.filter(s => s !== responseCode);
+        prev.set(field, updatedResponseCode.join(","));
       } else {
-        currentStatus.push(status);
-        prev.set("status", currentStatus.join(","));
+        currentResponseCode.push(responseCode);
+        prev.set(field, currentResponseCode.join(","));
       }
 
       return prev;
     });
+    handlePageChange(1); // back to page 1
   };
 
   const handleGroupBySimilar = () => {
@@ -160,7 +164,7 @@ const GalleryPage = () => {
       ...selectedTags,
       ...tag.tags.filter(tag => !selectedTags.includes(tag))
     ];
-  }, [technology, technologyFilter]);
+  }, [tag, tagFilter]);
 
   const sortedTechnologies = useMemo(() => {
     if (!technology) return [];
@@ -171,6 +175,15 @@ const GalleryPage = () => {
     ];
   }, [technology, technologyFilter]);
 
+  const sortedResponseCodes = useMemo(() => {
+    if (!responseCode) return [];
+    const selectedResponseCodes = responseCodeFilter.split(',').filter(Boolean);
+    return [
+      ...selectedResponseCodes,
+      ...responseCode.response_codes.filter(responseCode => !selectedResponseCodes.includes(responseCode.toString())).sort()
+    ];
+  }, [responseCode, responseCodeFilter]);
+
   const renderPageButtons = (visible: number) => {
     const pageButtons = [];
     const maxVisiblePages = visible;
@@ -180,7 +193,7 @@ const GalleryPage = () => {
     for (let i = startPage; i <= endPage; i++) {
       pageButtons.push(
         <Button
-          key={i}
+          key={"page=" + i}
           onClick={() => handlePageChange(i)}
           variant={i === page ? "secondary" : "outline"}
           size="sm"
@@ -265,8 +278,8 @@ const GalleryPage = () => {
             </Dialog>
           </CardContent>
 
-          <CardFooter className="p-0 flex flex-col items-start">
-            <Link className="w-full h-full" to={screenshot.url} key={screenshot.id}>
+          <CardFooter className="p-0 flex flex-col items-start" key={"screenshot-" + screenshot.id}>
+            <Link className="w-full h-full" to={screenshot.url}>
               <div className="w-full p-2 hover:bg-foreground/20 transition-background duration-300">
                 <TooltipProvider>
                   <Tooltip>
@@ -285,7 +298,7 @@ const GalleryPage = () => {
                 </div>
               </div>
             </Link>
-            <Link className="w-full h-full" to={`/screenshot/${screenshot.id}`} key={screenshot.id}>
+            <Link className="w-full h-full" to={`/screenshot/${screenshot.id}`}>
               <div className="w-full flex p-2 items-center justify-between hover:bg-foreground/20 transition-background duration-300">
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="default" className={`${getStatusColor(screenshot.response_code)} shadow-none`}>
@@ -313,7 +326,7 @@ const GalleryPage = () => {
                   {screenshot.technologies?.map(tech => {
                     const iconUrl = getIconUrl(tech, wappalyzer);
                     return iconUrl ? (
-                      <TooltipProvider key={tech} delayDuration={0}>
+                      <TooltipProvider key={"icon-" + tech} delayDuration={0}>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div className="w-5 h-5 flex items-center justify-center">
@@ -366,7 +379,7 @@ const GalleryPage = () => {
                   <CommandGroup>
                     {sortedTags.map((tag) => (
                       <CommandItem
-                        key={tag}
+                        key={"tag-filter-" + tag}
                         onSelect={() => handleTagChange(tag)}
                         disabled={loading}
                       >
@@ -405,7 +418,7 @@ const GalleryPage = () => {
                   <CommandGroup>
                     {sortedTechnologies.map((tech) => (
                       <CommandItem
-                        key={tech}
+                        key={"tech-filter-" + tech}
                         onSelect={() => handleTechnologyChange(tech)}
                         disabled={loading}
                       >
@@ -423,30 +436,45 @@ const GalleryPage = () => {
               </Command>
             </PopoverContent>
           </Popover>
-          <Button
-            variant={statusFilter.includes("200") ? "secondary" : "outline"}
-            onClick={() => handleStatusFilter("200")}
-            disabled={loading}
-          >
-            <ShieldCheckIcon className="mr-2 h-4 w-4" />
-            200
-          </Button>
-          <Button
-            variant={statusFilter.includes("403") ? "secondary" : "outline"}
-            onClick={() => handleStatusFilter("403")}
-            disabled={loading}
-          >
-            <BanIcon className="mr-2 h-4 w-4" />
-            403
-          </Button>
-          <Button
-            variant={statusFilter.includes("500") ? "secondary" : "outline"}
-            onClick={() => handleStatusFilter("500")}
-            disabled={loading}
-          >
-            <AlertOctagonIcon className="mr-2 h-4 w-4" />
-            500
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-[210px]">
+                <FileIcon className="mr-2 h-4 w-4" />
+                {responseCodeFilter.split(',').filter(n => n).length > 0 ? (
+                  <>
+                    {responseCodeFilter.split(',').length} status code{responseCodeFilter.split(',').length > 1 ? 's' : ''} selected
+                  </>
+                ) : (
+                  "Status codes"
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[210px] p-0">
+              <Command>
+                <CommandInput placeholder="Search status codes..." />
+                <CommandList>
+                  <CommandEmpty>No status codes found.</CommandEmpty>
+                  <CommandGroup>
+                    {sortedResponseCodes.map((responseCode) => (
+                      <CommandItem
+                        key={"response-code-filter-" + responseCode}
+                        onSelect={() => handleResponseCodeChange(responseCode.toString())}
+                        disabled={loading}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            responseCodeFilter.includes(responseCode.toString()) ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {responseCode}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <Button
             variant={perceptionGroup ? "secondary" : "outline"}
             onClick={handleGroupBySimilar}
@@ -525,7 +553,7 @@ const GalleryPage = () => {
         {loading ? (
           <>
             {Array.from({length: limit}).map((_, index) => (
-              <Card key={index} className="group overflow-hidden flex flex-col h-full rounded-lg">
+              <Card key={"skeleton-" + index} className="group overflow-hidden flex flex-col h-full rounded-lg">
                 <Skeleton className="w-full aspect-video rounded-none" />
                 <Skeleton className="h-[94px] rounded-none" />
               </Card>
@@ -539,8 +567,12 @@ const GalleryPage = () => {
       </div>
 
       <div className="flex justify-between items-center mt-8">
-        <Select value={limit.toString()} onValueChange={handleLimitChange} disabled={loading}>
-          <SelectTrigger className="w-[100px]">
+        <Select
+          value={limit.toString()}
+          onValueChange={handleLimitChange}
+          disabled={loading}
+        >
+          <SelectTrigger className="w-[100px] border-secondary">
             <SelectValue placeholder="Limit" />
           </SelectTrigger>
           <SelectContent>

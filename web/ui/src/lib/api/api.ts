@@ -1,4 +1,4 @@
-import { gallery, list, statistics, wappalyzer, detail, searchresult, technologylist, runner, taglist } from "@/lib/api/types";
+import { gallery, list, statistics, wappalyzer, detail, searchresult, technologylist, runner, taglist, responsecodelist } from "@/lib/api/types";
 
 const endpoints = {
   // api base path
@@ -44,6 +44,10 @@ const endpoints = {
   technology: {
     path: `/results/technology`,
     returnas: {} as technologylist
+  },
+  responsecode: {
+    path: `/results/responsecode`,
+    returnas: {} as responsecodelist
   },
   runners: {
     path: `/runners`,

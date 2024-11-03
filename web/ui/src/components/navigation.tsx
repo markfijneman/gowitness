@@ -103,7 +103,7 @@ const Navigation = () => {
                 />
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0" align="start">
+            <PopoverContent className="z-50 w-[300px] p-0" align="start">
               <div className="grid gap-4 p-4">
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Search Operators</h4>

@@ -2,6 +2,21 @@ import * as api from "@/lib/api/api";
 import * as apitypes from "@/lib/api/types";
 import { toast } from "@/hooks/use-toast";
 
+const getTagData = async (
+  setTag: React.Dispatch<React.SetStateAction<apitypes.taglist | undefined>>
+) => {
+  try {
+    const s = await api.get('tag');
+    setTag(s);
+  } catch (err) {
+    toast({
+      title: "API Error",
+      variant: "destructive",
+      description: `Failed to get wappalyzer / technology data: ${err}`
+    });
+  }
+};
+
 const getWappalyzerData = async (
   setWappalyzer: React.Dispatch<React.SetStateAction<apitypes.wappalyzer | undefined>>,
   setTechnology: React.Dispatch<React.SetStateAction<apitypes.technologylist | undefined>>
@@ -22,12 +37,12 @@ const getWappalyzerData = async (
   }
 };
 
-const getTagData = async (
-  setTag: React.Dispatch<React.SetStateAction<apitypes.taglist | undefined>>
+const getResponseCodeData = async (
+  setResponseCode: React.Dispatch<React.SetStateAction<apitypes.responsecodelist | undefined>>
 ) => {
   try {
-    const s = await api.get('tag');
-    setTag(s);
+    const s = await api.get('responsecode');
+    setResponseCode(s);
   } catch (err) {
     toast({
       title: "API Error",
@@ -75,4 +90,4 @@ const getData = async (
   }
 };
 
-export { getWappalyzerData, getTagData, getData };
+export { getTagData, getWappalyzerData, getResponseCodeData, getData };
