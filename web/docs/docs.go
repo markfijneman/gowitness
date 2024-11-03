@@ -194,6 +194,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/results/responsecode": {
+            "get": {
+                "description": "Get all unique response codes.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get response codes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.responseCodeListResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/results/tag": {
             "get": {
                 "description": "Get all unique tags.",
@@ -518,6 +538,17 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "api.responseCodeListResponse": {
+            "type": "object",
+            "properties": {
+                "response_codes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

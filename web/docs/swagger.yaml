@@ -68,6 +68,13 @@ definitions:
       url:
         type: string
     type: object
+  api.responseCodeListResponse:
+    properties:
+      response_codes:
+        items:
+          type: integer
+        type: array
+    type: object
   api.runnersResponse:
     properties:
       completed:
@@ -516,6 +523,19 @@ paths:
       summary: Results list
       tags:
       - Results
+  /results/responsecode:
+    get:
+      consumes:
+      - application/json
+      description: Get all unique response codes.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.responseCodeListResponse'
+      summary: Get response codes
   /results/tag:
     get:
       consumes:
