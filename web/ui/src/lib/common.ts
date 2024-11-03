@@ -17,6 +17,9 @@ const copyToClipboard = (content: string, type: string) => {
 };
 
 const getIconUrl = (tech: string, wappalyzer: apitypes.wappalyzer | undefined): string | undefined => {
+  // drop version numbers, e.g. Drupal:9 --> Drupal
+  tech = tech.split(":")[0];
+
   if (!wappalyzer || !(tech in wappalyzer)) return undefined;
 
   return wappalyzer[tech];
