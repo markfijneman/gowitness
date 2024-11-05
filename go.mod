@@ -1,6 +1,6 @@
 module github.com/markfijneman/gowitness
 
-go 1.23.0
+go 1.23
 
 require (
 	github.com/charmbracelet/glamour v0.8.0
