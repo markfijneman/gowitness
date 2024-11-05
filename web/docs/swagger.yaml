@@ -81,6 +81,10 @@ definitions:
         type: integer
       id:
         type: integer
+      tags:
+        items:
+          type: string
+        type: array
       target_count:
         type: integer
       threads:

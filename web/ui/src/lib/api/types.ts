@@ -187,6 +187,7 @@ type runner = {
   target_count: number;
   completed: number;
   threads: number;
+  tags: string[];
 }
 
 export type {

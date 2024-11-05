@@ -16,6 +16,7 @@ import { TextArea } from '@/components/ui/textarea';
 import { getData } from './data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 
 interface ProbeOptionsProps {
   isOptionsOpen: string;
@@ -471,6 +472,7 @@ export default function JobSubmissionPage() {
                 <TableRow>
                   <TableHead className="w-[100px]">ID</TableHead>
                   <TableHead className="w-[100px]">Threads</TableHead>
+                  <TableHead>Tags</TableHead>
                   <TableHead className="w-full">Progress</TableHead>
                 </TableRow>
               </TableHeader>
@@ -483,7 +485,16 @@ export default function JobSubmissionPage() {
                     <TableCell>
                       {item.threads}
                     </TableCell>
-                    <TableCell className="flex w-full items-center">
+                    <TableCell>
+                      <div className="flex gap-2">
+                        {item.tags?.map(tag => (
+                          <Badge variant="default" className="bg-purple-600 text-white shadow-none">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="flex w-full items-center min-w-60">
                       <span className="mr-2">{item.completed} / {item.target_count}</span>
                       <Progress className="flex-grow" progress={item.completed / item.target_count * 100} />
                     </TableCell>

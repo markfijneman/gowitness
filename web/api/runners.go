@@ -6,10 +6,11 @@ import (
 )
 
 type runnersResponse struct {
-	ID          int `json:"id"`
-	TargetCount int `json:"target_count"`
-	Completed   int `json:"completed"`
-	Threads     int `json:"threads"`
+	ID          int      `json:"id"`
+	TargetCount int      `json:"target_count"`
+	Completed   int      `json:"completed"`
+	Threads     int      `json:"threads"`
+	Tags        []string `json:"tags"`
 }
 
 // RunnersHandler returns runner statistics
@@ -30,6 +31,7 @@ func (h *ApiHandler) RunnersHandler(w http.ResponseWriter, r *http.Request) {
 			TargetCount: runner.TargetCount,
 			Completed:   runner.Completed,
 			Threads:     runner.Options.Scan.Threads,
+			Tags:        runner.Options.Scan.Tags,
 		})
 	}
 

@@ -561,6 +561,12 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "target_count": {
                     "type": "integer"
                 },
