@@ -157,6 +157,22 @@ const GalleryPage = () => {
     });
   };
 
+  const setVisited = (screenshot: apitypes.galleryResult) => {
+    if (!screenshot.visited) {
+      api.post("visit", { id: screenshot.id });
+      
+      setGallery((prev) =>
+        prev?.map(item => 
+          item.id === screenshot.id ? { ...item, visited: true } : item
+        )
+      );
+    }
+  };
+
+  const setVisitedAsync = async (screenshot: apitypes.galleryResult) => {
+    await setVisited(screenshot);
+  };
+
   const sortedTags = useMemo(() => {
     if (!tag) return [];
     const selectedTags = tagFilter.split(',').filter(Boolean);
@@ -279,17 +295,27 @@ const GalleryPage = () => {
           </CardContent>
 
           <CardFooter className="p-0 flex flex-col items-start" key={"screenshot-" + screenshot.id}>
-            <Link className="w-full h-full" to={screenshot.url}>
+            <Link
+              className="w-full h-full"
+              to={screenshot.url}
+              onClick={() => setVisited(screenshot)}
+              onAuxClick={(e) => {
+                if (e.button === 1) { // middle click
+                  setVisitedAsync(screenshot);
+                }
+              }}
+            >
               <div className="w-full p-2 hover:bg-foreground/20 transition-background duration-300">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="w-full truncate text-sm font-medium">
-                        {screenshot.title || "Untitled"}
+                        {!screenshot.visited && <span className="text-blue-500 mr-1.5 select-none">●</span>}
+                        {screenshot.title || <i>Untitled</i>}
                       </div>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{screenshot.title || "Untitled"}</p>
+                      <p>{screenshot.title || <i>Untitled</i>}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

@@ -80,6 +80,7 @@ func (s *Server) Run() {
 		r.Get("/results/gallery", apih.GalleryHandler)
 		r.Get("/results/list", apih.ListHandler)
 		r.Get("/results/detail/{id}", apih.DetailHandler)
+		r.Post("/results/visit", apih.VisitResultHandler)
 		r.Post("/results/delete", apih.DeleteResultHandler)
 		r.Get("/results/tag", apih.TagListHandler)
 		r.Get("/results/technology", apih.TechnologyListHandler)

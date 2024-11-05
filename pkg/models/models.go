@@ -33,6 +33,9 @@ type Result struct {
 	Filename string `json:"file_name"`
 	IsPDF    bool   `json:"is_pdf"`
 
+	// Visited flag set if URL is visited via the report server
+	Visited bool `json:"visited"`
+
 	// Failed flag set if the result should be considered failed
 	Failed       bool   `json:"failed"`
 	FailedReason string `json:"failed_reason"`

@@ -159,6 +159,12 @@ const docTemplate = `{
                         "description": "Include failed screenshots in the results.",
                         "name": "failed",
                         "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Hide duplicate final URLs.",
+                        "name": "hide_duplicates",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -255,6 +261,40 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/api.technologyListResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/results/visit": {
+            "post": {
+                "description": "Sets result as visited by id.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Results"
+                ],
+                "summary": "Set result as visited",
+                "parameters": [
+                    {
+                        "description": "The result ID to set as visited",
+                        "name": "query",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.visitResultRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -482,6 +522,9 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                },
+                "visited": {
+                    "type": "boolean"
                 }
             }
         },
@@ -746,6 +789,14 @@ const docTemplate = `{
                 }
             }
         },
+        "api.visitResultRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.ConsoleLog": {
             "type": "object",
             "properties": {
@@ -970,6 +1021,10 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                },
+                "visited": {
+                    "description": "Visited flag set if URL is visited via the report server",
+                    "type": "boolean"
                 }
             }
         },

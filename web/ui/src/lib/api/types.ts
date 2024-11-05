@@ -37,6 +37,7 @@ type galleryResult = {
   failed: boolean;
   tags: string[];
   technologies: string[];
+  visited: boolean;
 };
 
 // list
@@ -147,6 +148,7 @@ interface detail {
   is_pdf: boolean;
   failed: boolean;
   failed_reason: string;
+  visited: boolean;
   screenshot: string;
   tls: tls;
   tags: tag[];

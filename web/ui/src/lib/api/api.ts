@@ -59,6 +59,10 @@ const endpoints = {
     path: `/search`,
     returnas: {} as searchresult
   },
+  visit: {
+    path: `/results/visit`,
+    returnas: "" as string
+  },
   delete: {
     path: `/results/delete`,
     returnas: "" as string

@@ -93,6 +93,13 @@ const ScreenshotDetailPage = () => {
     }
   };
 
+  const setVisited = async () => {
+    if (detail && !detail.visited) {
+      await api.post("visit", { id: detail.id });
+      setDetail({ ...detail, visited: true });
+    }
+  };
+
   if (loading) return <WideSkeleton />;
   if (!detail) return;
 
@@ -229,10 +236,13 @@ const ScreenshotDetailPage = () => {
         </CardContent>
         <CardFooter className="flex justify-between items-center pt-4">
           <div>
-            <h2 className="text-xl font-bold">{detail.title}</h2>
+            <h2 className="text-xl font-bold">
+              {!detail.visited && <span className="text-blue-500 mr-1.5 select-none">●</span>}
+              {detail.title || "Untitled"}
+            </h2>
             <p className="text-sm text-muted-foreground">{detail.url}</p>
           </div>
-          <Button onClick={() => window.open(detail.url, '_blank')}>
+          <Button onClick={() => {window.open(detail.url, '_blank') && setVisited()}}>
             <ExternalLink className="mr-2 h-4 w-4" />
             Open URL
           </Button>

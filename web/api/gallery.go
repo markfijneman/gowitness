@@ -26,6 +26,7 @@ type galleryContent struct {
 	Title        string    `json:"title"`
 	Filename     string    `json:"file_name"`
 	Screenshot   string    `json:"screenshot"`
+	Visited      bool      `json:"visited"`
 	Failed       bool      `json:"failed"`
 	Tags         []string  `json:"tags"`
 	Technologies []string  `json:"technologies"`
@@ -45,6 +46,7 @@ type galleryContent struct {
 //	@Param			status			query		string	false	"A comma separated list of HTTP status codes to filter by."
 //	@Param			perception		query		boolean	false	"Order the results by perception hash."
 //	@Param			failed			query		boolean	false	"Include failed screenshots in the results."
+//	@Param			hide_duplicates	query		boolean	false	"Hide duplicate final URLs."
 //	@Success		200				{object}	galleryResponse
 //	@Router			/results/gallery [get]
 func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
@@ -177,6 +179,7 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 			Title:        result.Title,
 			Filename:     result.Filename,
 			Screenshot:   result.Screenshot,
+			Visited:      result.Visited,
 			Failed:       result.Failed,
 			Tags:         tags,
 			Technologies: technologies,

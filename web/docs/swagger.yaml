@@ -30,6 +30,8 @@ definitions:
         type: string
       url:
         type: string
+      visited:
+        type: boolean
     type: object
   api.galleryResponse:
     properties:
@@ -201,6 +203,11 @@ definitions:
           type: string
         type: array
     type: object
+  api.visitResultRequest:
+    properties:
+      id:
+        type: integer
+    type: object
   models.ConsoleLog:
     properties:
       id:
@@ -351,6 +358,9 @@ definitions:
         $ref: '#/definitions/models.TLS'
       url:
         type: string
+      visited:
+        description: Visited flag set if URL is visited via the report server
+        type: boolean
     type: object
   models.TLS:
     properties:
@@ -504,6 +514,10 @@ paths:
         in: query
         name: failed
         type: boolean
+      - description: Hide duplicate final URLs.
+        in: query
+        name: hide_duplicates
+        type: boolean
       produces:
       - application/json
       responses:
@@ -570,6 +584,28 @@ paths:
           schema:
             $ref: '#/definitions/api.technologyListResponse'
       summary: Get technology results
+      tags:
+      - Results
+  /results/visit:
+    post:
+      consumes:
+      - application/json
+      description: Sets result as visited by id.
+      parameters:
+      - description: The result ID to set as visited
+        in: body
+        name: query
+        required: true
+        schema:
+          $ref: '#/definitions/api.visitResultRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Set result as visited
       tags:
       - Results
   /runners:
