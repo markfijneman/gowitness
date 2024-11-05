@@ -251,8 +251,8 @@ export default function JobSubmissionPage() {
                 {!advancedOptions && (
                   <>
                     <input type="hidden" name="format" value="jpeg" />
-                    <input type="hidden" name="timeout" value="60" />
-                    <input type="hidden" name="delay" value="5" />
+                    <input type="hidden" name="timeout" value="20" />
+                    <input type="hidden" name="delay" value="1" />
                     <input type="hidden" name="user_agent" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" />
                     <input type="hidden" name="window_x" value="1920" />
                     <input type="hidden" name="window_y" value="1080" />
@@ -301,8 +301,8 @@ export default function JobSubmissionPage() {
                 {!advancedOptions && (
                   <>
                     <input type="hidden" name="format" value="jpeg" />
-                    <input type="hidden" name="timeout" value="60" />
-                    <input type="hidden" name="delay" value="5" />
+                    <input type="hidden" name="timeout" value="20" />
+                    <input type="hidden" name="delay" value="1" />
                     <input type="hidden" name="user_agent" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" />
                     <input type="hidden" name="window_x" value="1920" />
                     <input type="hidden" name="window_y" value="1080" />
