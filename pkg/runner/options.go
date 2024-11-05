@@ -103,7 +103,7 @@ func NewDefaultOptions() *Options {
 		},
 		Scan: Scan{
 			Driver:           "chromedp",
-			Threads:          6,
+			Threads:          8,
 			Timeout:          20,
 			UriFilter:        []string{"http", "https"},
 			ScreenshotFormat: "jpeg",

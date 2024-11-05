@@ -679,6 +679,9 @@
                         "type": "string"
                     }
                 },
+                "threads": {
+                    "type": "integer"
+                },
                 "timeout": {
                     "type": "integer"
                 },

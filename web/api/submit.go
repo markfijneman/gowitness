@@ -22,6 +22,7 @@ type submitRequestOptions struct {
 	Y         int      `json:"window_y"`
 	Tags      []string `json:"tags"`
 	UserAgent string   `json:"user_agent"`
+	Threads   int      `json:"threads"`
 	Timeout   int      `json:"timeout"`
 	Delay     int      `json:"delay"`
 	Format    string   `json:"format"`
@@ -66,6 +67,9 @@ func (h *ApiHandler) SubmitHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if request.Options.UserAgent != "" {
 			options.Chrome.UserAgent = request.Options.UserAgent
+		}
+		if request.Options.Threads != 0 {
+			options.Scan.Threads = request.Options.Threads
 		}
 		if request.Options.Timeout != 0 {
 			options.Scan.Timeout = request.Options.Timeout

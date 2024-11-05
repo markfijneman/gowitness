@@ -165,6 +165,8 @@ definitions:
         items:
           type: string
         type: array
+      threads:
+        type: integer
       timeout:
         type: integer
       user_agent:

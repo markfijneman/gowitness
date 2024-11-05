@@ -21,6 +21,7 @@ const submitJobAction = async ({ formData }: { formData: FormData; }) => {
   const options = {
     tags,
     format: formData.get('format'),
+    threads: parseInt(formData.get('threads') as string),
     timeout: parseInt(formData.get('timeout') as string),
     delay: parseInt(formData.get('delay') as string),
     user_agent: formData.get('user_agent'),

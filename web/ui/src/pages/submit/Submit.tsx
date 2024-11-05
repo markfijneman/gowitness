@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, useActionData, useNavigation } from 'react-router-dom';
-import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw, TagsIcon, AppWindowIcon, MoveHorizontalIcon, MoveVerticalIcon, FileImageIcon, LinkIcon } from 'lucide-react';
+import { Send, Settings, GlobeIcon, ExternalLinkIcon, ServerIcon, FileTypeIcon, ClockIcon, ScanTextIcon, SquarePlayIcon, RotateCcw, TagsIcon, AppWindowIcon, MoveHorizontalIcon, MoveVerticalIcon, FileImageIcon, LinkIcon, CpuIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,9 +22,10 @@ interface ProbeOptionsProps {
   setIsOptionsOpen: (value: string) => void;
   advancedOptions: boolean;
   setAdvancedOptions: (value: boolean) => void;
+  tab: string;
 }
 
-const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdvancedOptions }: ProbeOptionsProps)  => (
+const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdvancedOptions, tab }: ProbeOptionsProps)  => (
   <Accordion
     type="single"
     collapsible
@@ -39,7 +40,7 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
       </AccordionTrigger>
       <AccordionContent>
         <div className="space-y-4 pt-4">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className={`grid gap-4 ${tab === "job" ? "lg:grid-cols-4 grid-cols-2" : "md:grid-cols-3"}`}>
             <div className="space-y-2">
               <Label htmlFor="format">Screenshot Format</Label>
               <Select name="format" defaultValue="jpeg">
@@ -57,6 +58,23 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
               </Select>
             </div>
 
+            {tab === "job" && (
+              <div className="space-y-2">
+                <Label htmlFor="threads">Threads</Label>
+                <div className="relative">
+                  <CpuIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="threads"
+                    name="threads"
+                    type="number"
+                    min="1"
+                    defaultValue="8"
+                    className="pl-8"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="timeout">Timeout (seconds)</Label>
               <div className="relative">
@@ -66,7 +84,7 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
                   name="timeout"
                   type="number"
                   min="0"
-                  defaultValue="60"
+                  defaultValue="20"
                   className="pl-8"
                 />
               </div>
@@ -80,7 +98,7 @@ const ProbeOptions = ({ isOptionsOpen, setIsOptionsOpen, advancedOptions, setAdv
                   name="delay"
                   type="number"
                   min="0"
-                  defaultValue="5"
+                  defaultValue="1"
                   className="pl-8"
                 />
               </div>
@@ -242,15 +260,17 @@ export default function JobSubmissionPage() {
                 <input type="hidden" name="action" value="job" />
 
                 <ProbeOptions 
-                  isOptionsOpen={isOptionsOpen} 
-                  setIsOptionsOpen={setIsOptionsOpen} 
-                  advancedOptions={advancedOptions} 
-                  setAdvancedOptions={setAdvancedOptions} 
+                  isOptionsOpen={isOptionsOpen}
+                  setIsOptionsOpen={setIsOptionsOpen}
+                  advancedOptions={advancedOptions}
+                  setAdvancedOptions={setAdvancedOptions}
+                  tab="job"
                 />
 
                 {!advancedOptions && (
                   <>
                     <input type="hidden" name="format" value="jpeg" />
+                    <input type="hidden" name="threads" value="8" />
                     <input type="hidden" name="timeout" value="20" />
                     <input type="hidden" name="delay" value="1" />
                     <input type="hidden" name="user_agent" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" />
@@ -295,12 +315,14 @@ export default function JobSubmissionPage() {
                   isOptionsOpen={isOptionsOpen} 
                   setIsOptionsOpen={setIsOptionsOpen} 
                   advancedOptions={advancedOptions} 
-                  setAdvancedOptions={setAdvancedOptions} 
+                  setAdvancedOptions={setAdvancedOptions}
+                  tab="immediate"
                 />
 
                 {!advancedOptions && (
                   <>
                     <input type="hidden" name="format" value="jpeg" />
+                    <input type="hidden" name="threads" value="8" />
                     <input type="hidden" name="timeout" value="20" />
                     <input type="hidden" name="delay" value="1" />
                     <input type="hidden" name="user_agent" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" />

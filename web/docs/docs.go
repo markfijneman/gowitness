@@ -690,6 +690,9 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "threads": {
+                    "type": "integer"
+                },
                 "timeout": {
                     "type": "integer"
                 },
