@@ -9,6 +9,11 @@ const getData = async (
   setLoading(true);
   try {
     const s = await api.get('statistics');
+    
+    if (s.response_code_stats == null) {
+      s.response_code_stats = [];
+    }
+
     setStats(s);
   } catch (err) {
     toast({
