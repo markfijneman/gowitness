@@ -18,8 +18,8 @@ const App = () => {
             <a href="/swagger/index.html" className="underline">
               API Documentation
             </a>
-            {" "}|
-            Made with ♥ by <a href="https://github.com/leonjza" target="_blank" rel="noopener noreferrer" className="underline">@leonjza</a>
+            {" "}|{" "}
+            <a href="https://github.com/markfijneman/gowitness" target="_blank" rel="noopener noreferrer" className="underline">Source code</a>
           </p>
         </footer>
       </div>
