@@ -235,7 +235,7 @@ const GalleryPage = () => {
     const rawDate = format(probedDate, "PPpp"); // Formats the date in a readable format
 
     return (
-        <Card className="group overflow-hidden transition-all shadow hover:shadow-lg flex flex-col h-full rounded-lg">
+        <Card className={`group overflow-hidden transition-all shadow hover:shadow-lg flex flex-col h-full rounded-lg border ${screenshot.visited ? "border-transparent" : "border-blue-500"}`}>
           <CardContent className="p-0 relative flex-grow">
             <Dialog open={isModalOpen && modalId == screenshot.id} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
@@ -309,7 +309,7 @@ const GalleryPage = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="w-full truncate text-sm font-medium">
+                      <div className={`w-full truncate text-sm ${screenshot.visited ? "font-medium" : "font-bold"}`}>
                         {!screenshot.visited && <span className="text-blue-500 mr-1.5 select-none">●</span>}
                         {screenshot.title || <i>Untitled</i>}
                       </div>

@@ -183,7 +183,7 @@ const ScreenshotDetailPage = () => {
 
   const infoCard = (detail: apitypes.detail) => {
     return (
-      <Card>
+      <Card className={`border ${detail.visited ? "border-transparent" : "border-blue-500"}`}>
         <CardContent className="p-0 relative group">
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
@@ -236,7 +236,7 @@ const ScreenshotDetailPage = () => {
         </CardContent>
         <CardFooter className="flex justify-between items-center pt-4">
           <div>
-            <h2 className="text-xl font-bold">
+            <h2 className={`text-xl ${detail.visited ? "font-medium" : "font-bold"}`}>
               {!detail.visited && <span className="text-blue-500 mr-1.5 select-none">●</span>}
               {detail.title || "Untitled"}
             </h2>
