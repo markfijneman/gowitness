@@ -64,6 +64,7 @@ const getData = async (
   perceptionGroup: boolean,
   showFailed: boolean,
   hideDuplicates: boolean,
+  hideVisited: boolean,
 ) => {
   setLoading(true);
   try {
@@ -75,7 +76,8 @@ const getData = async (
       status: statusFilter,
       perception: perceptionGroup ? 'true' : 'false',
       failed: showFailed ? 'true' : 'false',
-      hide_duplicates: hideDuplicates ? 'true' : 'false'
+      hide_duplicates: hideDuplicates ? 'true' : 'false',
+      hide_visited: hideVisited ? 'true' : 'false'
     });
     setGallery(s.results);
     setTotalPages(Math.ceil(s.total_count / limit));

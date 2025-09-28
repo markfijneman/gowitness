@@ -116,6 +116,13 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 		hideDuplicates = true
 	}
 
+	// hide visited URLs
+	var hideVisited bool
+	hideVisited, err = strconv.ParseBool(r.URL.Query().Get("hide_visited"))
+	if err != nil {
+		hideVisited = false
+	}
+
 	// query the db
 	var queryResults []*models.Result
 	query := h.DB.Model(&models.Result{}).Limit(results.Limit).
@@ -124,6 +131,10 @@ func (h *ApiHandler) GalleryHandler(w http.ResponseWriter, r *http.Request) {
 	if hideDuplicates {
 		// Trim away / so http to https redirects also get filtered out, as those commonly redirect from http://example.com to https://example.com/
 		query = query.Group("trim(final_url, '/')")
+	}
+
+	if hideVisited {
+		query = query.Where("visited = 0")
 	}
 
 	if perceptionSort {

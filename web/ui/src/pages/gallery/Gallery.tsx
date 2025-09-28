@@ -44,6 +44,7 @@ const GalleryPage = () => {
   const perceptionGroup = searchParams.get("perception") === "true";
   const showFailed = searchParams.get("failed") !== "false"; // Default to true
   const hideDuplicates = searchParams.get("hide_duplicates") !== "false";
+  const hideVisited = searchParams.get("hide_visited") === "true";
 
   // cards
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,9 +59,9 @@ const GalleryPage = () => {
   useEffect(() => {
     getData(
       setLoading, setGallery, setTotalPages,
-      page, limit, tagFilter, technologyFilter, responseCodeFilter, perceptionGroup, showFailed, hideDuplicates
+      page, limit, tagFilter, technologyFilter, responseCodeFilter, perceptionGroup, showFailed, hideDuplicates, hideVisited
     );
-  }, [page, limit, perceptionGroup, tagFilter, responseCodeFilter, technologyFilter, showFailed, hideDuplicates]);
+  }, [page, limit, perceptionGroup, tagFilter, responseCodeFilter, technologyFilter, showFailed, hideDuplicates, hideVisited]);
 
   const handlePageChange = (newPage: number) => {
     window.scrollTo({ top: 0 });
@@ -153,6 +154,14 @@ const GalleryPage = () => {
     window.scrollTo({ top: 0 });
     setSearchParams(prev => {
       prev.set("hide_duplicates", (!hideDuplicates).toString());
+      return prev;
+    });
+  };
+
+    const handleToggleHideVisited = () => {
+    window.scrollTo({ top: 0 });
+    setSearchParams(prev => {
+      prev.set("hide_visited", (!hideVisited).toString());
       return prev;
     });
   };
@@ -543,6 +552,18 @@ const GalleryPage = () => {
                           )}
                         />
                       Hide duplicates
+                    </CommandItem>
+                    <CommandItem
+                      onSelect={handleToggleHideVisited}
+                      disabled={loading}
+                    >
+                      <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            hideVisited ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      Hide visited
                     </CommandItem>
                   </CommandGroup>
                 </CommandList>
