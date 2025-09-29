@@ -307,6 +307,7 @@ const GalleryPage = () => {
             <Link
               className="w-full h-full"
               to={screenshot.url}
+              target="_blank"
               onClick={() => setVisited(screenshot)}
               onAuxClick={(e) => {
                 if (e.button === 1) { // middle click
